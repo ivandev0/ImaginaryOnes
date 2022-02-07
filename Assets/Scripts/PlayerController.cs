@@ -11,11 +11,15 @@ public class PlayerController : MonoBehaviour {
 
     private new Camera camera;
     private float radius;
+    private Material material;
     private const float movementSpeed = 20.0f;
+
+    private static readonly int dissolve = Shader.PropertyToID("Dissolve");
 
     void Start() {
         camera = Camera.main;
-        radius = GetComponent<SphereCollider>().radius;
+        radius = GetComponent<SphereCollider>().radius * transform.localScale.x;
+        material = GetComponent<MeshRenderer>().sharedMaterial;
 
         var verticalExtent = camera.orthographicSize;
         var horizontalExtent = verticalExtent * Screen.width / Screen.height;
@@ -37,6 +41,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void MoveToTheScreenCenter(Action atTheEnd) {
+        material.SetFloat(dissolve, 0);
         StartCoroutine(MoveToTheScreenCenterRoutine(atTheEnd));
     }
 
@@ -55,6 +60,34 @@ public class PlayerController : MonoBehaviour {
             yield return null;
         }
         transform.position = end;
+        atTheEnd();
+    }
+
+    public void BlowUp(Action atTheEnd) {
+        StartCoroutine(BlowUpRoutine(atTheEnd));
+    }
+
+    private IEnumerator BlowUpRoutine(Action atTheEnd) {
+        var initScale = transform.localScale.x;
+        const int start = 0;
+        const float end = 1;
+        const float scaleCoef = 2f;
+        material = GetComponent<MeshRenderer>().sharedMaterial;
+
+        float timeElapsed = 0;
+        const float lerpDuration = 0.25f;
+        while (timeElapsed < lerpDuration) {
+            var scale = Mathf.Lerp(start, end, timeElapsed / lerpDuration);
+            timeElapsed += Time.deltaTime;
+            var newLocalScale = initScale + scale * scaleCoef;
+            transform.localScale = new Vector3(newLocalScale, newLocalScale, newLocalScale);
+            material.SetFloat(dissolve, scale);
+            yield return null;
+        }
+
+        var endLocalScale = initScale + end * scaleCoef;
+        transform.position = new Vector3(endLocalScale, endLocalScale, endLocalScale);
+        material.SetFloat(dissolve, end);
         atTheEnd();
     }
 }

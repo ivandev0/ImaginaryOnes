@@ -8,8 +8,8 @@ public class PlayersPartController : MonoBehaviour {
 
     void Start() {
         rigidbody = GetComponent<Rigidbody>();
-        radius = GetComponent<SphereCollider>().radius;
-        playerRadius = GetComponent<SphereCollider>().radius;
+        radius = GetComponent<SphereCollider>().radius * player.transform.localScale.x;
+        playerRadius = GetComponent<SphereCollider>().radius * transform.localScale.x;
     }
 
     void Update() {

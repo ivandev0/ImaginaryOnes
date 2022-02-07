@@ -9,8 +9,8 @@ public class GameController : Singleton<GameController> {
 
     public float gameSpeed = 1.0f;
 
-    private bool onBegin = true;
-    private bool onPlay, onPause, onEnd;
+    private bool isBegin = true;
+    private bool isPlay, isPause, isEnd;
 
     void Start() {
         playButton.GetComponent<Button>().onClick.AddListener(Begin);
@@ -21,15 +21,22 @@ public class GameController : Singleton<GameController> {
     }
 
     public bool GameIsOn() {
-        return onPlay;
+        return isPlay;
     }
 
     public void Begin() {
         playButton.SetActive(false);
-        onBegin = true;
+        isBegin = true;
         player.GetComponent<PlayerController>().MoveToTheScreenCenter(() => {
-            onBegin = false;
-            onPlay = true;
+            isBegin = false;
+            isPlay = true;
+        });
+    }
+
+    public void GameOver() {
+        isPlay = false;
+        player.GetComponent<PlayerController>().BlowUp(() => {
+            isEnd = true;
         });
     }
 }
