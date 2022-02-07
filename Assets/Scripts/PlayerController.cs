@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
-    public float minimumX;
-    public float maximumX;
-    public float minimumY;
-    public float maximumY;
+    private float minimumX;
+    private float maximumX;
+    private float minimumY;
+    private float maximumY;
 
     private new Camera camera;
     private float radius;
@@ -14,6 +14,14 @@ public class PlayerController : MonoBehaviour {
     void Start() {
         camera = Camera.main;
         radius = GetComponent<SphereCollider>().radius;
+
+        var verticalExtent = camera.orthographicSize;
+        var horizontalExtent = verticalExtent * Screen.width / Screen.height;
+
+        minimumX = -horizontalExtent;
+        maximumX = horizontalExtent;
+        minimumY = -verticalExtent;
+        maximumY = verticalExtent;
     }
 
     void Update() {
