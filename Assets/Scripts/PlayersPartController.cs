@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayersPartController : MonoBehaviour {
     public GameObject player;
-    private Rigidbody rigidbody;
+    private new Rigidbody rigidbody;
     private float radius;
     private float playerRadius;
 
