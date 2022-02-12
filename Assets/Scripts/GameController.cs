@@ -7,13 +7,16 @@ public class GameController : Singleton<GameController> {
     public GameObject player;
     public GameObject playButton;
     public GameObject gameOverView;
+    public GameObject scoreText;
 
     public float gameSpeed = 1.0f;
 
     private bool isBegin = true;
     private bool isPlay, isPause, isEnd;
+    private float score;
     private Coroutine enemySpawnRoutine;
     private Coroutine partsSpawnRoutine;
+    private Coroutine scoreRoutine;
 
     void Start() {
         playButton.SetActive(true);
@@ -33,6 +36,8 @@ public class GameController : Singleton<GameController> {
     public void Begin() {
         playButton.SetActive(false);
         gameOverView.SetActive(false);
+        scoreText.SetActive(true);
+        score = 0;
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy")) {
             Destroy(enemy);
@@ -44,6 +49,7 @@ public class GameController : Singleton<GameController> {
             isPlay = true;
             enemySpawnRoutine = StartCoroutine(EnemyController.Instance.SpawnWaves());
             partsSpawnRoutine = StartCoroutine(PlayerPartsController.Instance.SpawnWaves());
+            scoreRoutine = StartCoroutine(CountScore());
         });
     }
 
@@ -51,6 +57,7 @@ public class GameController : Singleton<GameController> {
         isPlay = false;
         StopCoroutine(enemySpawnRoutine);
         StopCoroutine(partsSpawnRoutine);
+        StopCoroutine(scoreRoutine);
 
         foreach (var unattachedPlayerPart in GameObject.FindGameObjectsWithTag("UnattachedPlayerPart")) {
             unattachedPlayerPart.GetComponent<PlayerPart>().BlowUp(() => { Destroy(unattachedPlayerPart); });
@@ -62,7 +69,16 @@ public class GameController : Singleton<GameController> {
         player.GetComponent<PlayerController>().BlowUp(() => {
             isEnd = true;
             gameOverView.SetActive(true);
-            gameOverView.GetComponentInChildren<Text>().text = "Score: " + 0;
+            scoreText.SetActive(false);
+            gameOverView.GetComponentInChildren<Text>().text = "Score: " + score;
         });
+    }
+
+    private IEnumerator CountScore() {
+        while (GameIsOn()) {
+            yield return new WaitForSeconds(1);
+            score += gameSpeed * (PlayerPartsController.Instance.GetPlayersPartsCount() + 1);
+            scoreText.GetComponent<Text>().text = "Score: " + score;
+        }
     }
 }

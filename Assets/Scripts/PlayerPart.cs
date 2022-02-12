@@ -9,7 +9,7 @@ public class PlayerPart : ObjectWithBorder {
     private float radius;
     private float playerRadius;
 
-    private bool isAttached = false;
+    public bool IsAttached { get; private set; } = false;
     private bool isDestroyed = false;
 
     new void Start() {
@@ -24,7 +24,7 @@ public class PlayerPart : ObjectWithBorder {
     }
 
     void Update() {
-        if (!isAttached) {
+        if (!IsAttached) {
             rigidbody.velocity = -transform.up * freeFallingSpeed;
         } else {
             var clampedPosition = Clamp(transform.position, radius / 2);
@@ -52,7 +52,7 @@ public class PlayerPart : ObjectWithBorder {
         if (!other.gameObject.CompareTag("Player")) return;
         sphereCollider.radius = radius;
         sphereCollider.isTrigger = false;
-        isAttached = true;
+        IsAttached = true;
         gameObject.tag = "PlayerPart";
     }
 }

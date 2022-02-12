@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerPartsController : Singleton<PlayerPartsController> {
@@ -31,5 +32,9 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
             }
             yield return new WaitForSeconds(waveWait);
         }
+    }
+
+    public int GetPlayersPartsCount() {
+        return transform.Cast<Transform>().Count(child => child.GetComponent<PlayerPart>().IsAttached);
     }
 }
