@@ -2,11 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class EnemiesByLevel {
+    public GameObject[] enemies;
+}
+
+[System.Serializable]
+public class Patterns {
+    public GameObject[] enemies;
+    public float delay;
+}
+
 public class EnemyController : Singleton<EnemyController> {
     public int nailsCount = 2;
     public float spawnWait = 1.0f;
     public float waveWait = 2.0f;
     public GameObject nail;
+    public GameObject rocket;
 
     private Vector3 spawnValues;
 
@@ -26,7 +38,7 @@ public class EnemyController : Singleton<EnemyController> {
             for (var i = 0; i < nailsCount; i++) {
                 var spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                 var spawnRotation = Quaternion.identity;
-                Instantiate(nail, spawnPosition, spawnRotation);
+                Instantiate(rocket, spawnPosition, spawnRotation);
                 yield return new WaitForSeconds(spawnWait);
             }
             yield return new WaitForSeconds(waveWait);

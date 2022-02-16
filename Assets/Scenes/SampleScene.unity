@@ -518,6 +518,7 @@ MonoBehaviour:
   spawnWait: 1
   waveWait: 2
   nail: {fileID: 3758040227696466693, guid: 65db08994b906644cbd0e8c37eb46e4a, type: 3}
+  rocket: {fileID: 7815452260863958655, guid: 8f653bc743268bb439d0b60c0bd50078, type: 3}
 --- !u!1 &1219993095
 GameObject:
   m_ObjectHideFlags: 0
@@ -1031,7 +1032,10 @@ MonoBehaviour:
   playButton: {fileID: 1478280827}
   gameOverView: {fileID: 552719915}
   scoreText: {fileID: 1804299639}
+  deltaNextLevel: 10
+  offsetNextLevel: 10
   gameSpeed: 1
+  gameLevel: 0
 --- !u!4 &1668137777
 Transform:
   m_ObjectHideFlags: 0

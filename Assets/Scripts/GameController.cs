@@ -8,8 +8,12 @@ public class GameController : Singleton<GameController> {
     public GameObject playButton;
     public GameObject gameOverView;
     public GameObject scoreText;
+    public float deltaNextLevel = 10;
+    public float offsetNextLevel = 5;
 
     public float gameSpeed = 1.0f;
+    public int gameLevel = 0;
+    private const int maxGameLevel = 7;
 
     private bool isBegin = true;
     private bool isPlay, isPause, isEnd;
@@ -17,6 +21,7 @@ public class GameController : Singleton<GameController> {
     private Coroutine enemySpawnRoutine;
     private Coroutine partsSpawnRoutine;
     private Coroutine scoreRoutine;
+    private Coroutine gameLevelRoutine;
 
     void Start() {
         playButton.SetActive(true);
@@ -51,6 +56,7 @@ public class GameController : Singleton<GameController> {
             enemySpawnRoutine = StartCoroutine(EnemyController.Instance.SpawnWaves());
             partsSpawnRoutine = StartCoroutine(PlayerPartsController.Instance.SpawnWaves());
             scoreRoutine = StartCoroutine(CountScore());
+            gameLevelRoutine = StartCoroutine(GameLevelRoutine());
         });
     }
 
@@ -59,6 +65,7 @@ public class GameController : Singleton<GameController> {
         StopCoroutine(enemySpawnRoutine);
         StopCoroutine(partsSpawnRoutine);
         StopCoroutine(scoreRoutine);
+        StopCoroutine(gameLevelRoutine);
 
         foreach (var unattachedPlayerPart in GameObject.FindGameObjectsWithTag("UnattachedPlayerPart")) {
             unattachedPlayerPart.GetComponent<PlayerPart>().BlowUp(() => { Destroy(unattachedPlayerPart); });
@@ -84,6 +91,13 @@ public class GameController : Singleton<GameController> {
             yield return new WaitForSeconds(1);
             score += gameSpeed * (PlayerPartsController.Instance.GetPlayersPartsCount() + 1);
             SetScore();
+        }
+    }
+
+    private IEnumerator GameLevelRoutine() {
+        while (GameIsOn() && gameLevel < maxGameLevel) {
+            yield return new WaitForSeconds(deltaNextLevel + gameLevel * offsetNextLevel);
+            gameLevel++;
         }
     }
 }

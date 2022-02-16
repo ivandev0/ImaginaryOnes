@@ -6,6 +6,8 @@ public static class Explosive {
 	public static readonly int dissolve = Shader.PropertyToID("Dissolve");
 
 	public static IEnumerator BlowUp(GameObject gameObject, Action atTheEnd) {
+		gameObject.GetComponent<Collider>().isTrigger = true;
+
 		var initScale = gameObject.transform.localScale.x;
 		const int start = 0;
 		const float end = 1;

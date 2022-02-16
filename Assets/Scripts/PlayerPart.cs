@@ -31,7 +31,11 @@ public class PlayerPart : ObjectWithBorder {
             if (clampedPosition != transform.position) {
                 transform.position = clampedPosition;
             } else {
-                rigidbody.velocity = (player.transform.position - transform.position) * GetVelocityMultiplier();
+                if (Vector3.Distance(transform.position, player.transform.position) > playerRadius + radius) {
+                    rigidbody.velocity = (player.transform.position - transform.position) * GetVelocityMultiplier();
+                } else {
+                    rigidbody.velocity = Vector3.zero;
+                }
             }
         }
     }
