@@ -50,4 +50,5 @@ Material:
     - Vector1_7d4f6cde2cfa40e1a460737119d256a0: 0.97555524
     m_Colors:
     - Color_0cdc283699b949218082e8659ca6fa15: {r: 0.82745105, g: 0.7490196, b: 0.7058824, a: 0}
+    - Tint: {r: 0.754717, g: 0.754717, b: 0.754717, a: 0}
   m_BuildTextureStacks: []
