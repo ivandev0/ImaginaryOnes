@@ -20,6 +20,7 @@ public class EnemyController : Singleton<EnemyController> {
     public GameObject nail;
     public GameObject rocket;
     public GameObject cloud;
+    public GameObject boomerang;
 
     private Vector3 spawnValues;
 
@@ -38,8 +39,8 @@ public class EnemyController : Singleton<EnemyController> {
         while (GameController.Instance.GameIsOn()) {
             for (var i = 0; i < nailsCount; i++) {
                 var spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-                var spawnRotation = cloud.transform.rotation;
-                Instantiate(cloud, spawnPosition, spawnRotation);
+                var spawnRotation = boomerang.transform.rotation;
+                Instantiate(boomerang, spawnPosition, spawnRotation);
                 yield return new WaitForSeconds(spawnWait);
             }
             yield return new WaitForSeconds(waveWait);

@@ -520,6 +520,7 @@ MonoBehaviour:
   nail: {fileID: 3758040227696466693, guid: 65db08994b906644cbd0e8c37eb46e4a, type: 3}
   rocket: {fileID: 7815452260863958655, guid: 8f653bc743268bb439d0b60c0bd50078, type: 3}
   cloud: {fileID: 3983320729658018539, guid: f40f4679b5e316c4d878a27bfbc32ddc, type: 3}
+  boomerang: {fileID: 2592890660476446095, guid: f8db19571e49f854fa4d88ba92ecdfb9, type: 3}
 --- !u!1 &1219993095
 GameObject:
   m_ObjectHideFlags: 0
