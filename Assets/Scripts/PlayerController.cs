@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerController : ObjectWithBorder {
     private new Camera camera;
+    private new Rigidbody rigidbody;
     private float radius;
     private Material material;
     private Vector3 initPosition;
@@ -13,13 +14,17 @@ public class PlayerController : ObjectWithBorder {
     protected new void Start() {
         base.Start();
         camera = Camera.main;
+        rigidbody = GetComponent<Rigidbody>();
         radius = GetComponent<SphereCollider>().radius * transform.localScale.x;
         material = GetComponent<MeshRenderer>().material;
         initPosition = transform.position;
     }
 
     void Update() {
-        if (!GameController.Instance.GameIsOn()) return;
+        if (!GameController.Instance.GameIsOn()) {
+            rigidbody.velocity = Vector3.zero;
+            return;
+        }
         var worldPosition = Clamp(camera.ScreenToWorldPoint(Input.mousePosition), radius);
         transform.position = Vector3.MoveTowards(transform.position, worldPosition, movementSpeed * Time.deltaTime);
     }

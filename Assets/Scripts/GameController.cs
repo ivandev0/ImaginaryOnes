@@ -38,6 +38,7 @@ public class GameController : Singleton<GameController> {
         gameOverView.SetActive(false);
         scoreText.SetActive(true);
         score = 0;
+        SetScore();
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy")) {
             Destroy(enemy);
@@ -74,11 +75,15 @@ public class GameController : Singleton<GameController> {
         });
     }
 
+    private void SetScore() {
+        scoreText.GetComponent<Text>().text = "Score: " + score;
+    }
+
     private IEnumerator CountScore() {
         while (GameIsOn()) {
             yield return new WaitForSeconds(1);
             score += gameSpeed * (PlayerPartsController.Instance.GetPlayersPartsCount() + 1);
-            scoreText.GetComponent<Text>().text = "Score: " + score;
+            SetScore();
         }
     }
 }
