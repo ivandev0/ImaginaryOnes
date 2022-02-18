@@ -68,6 +68,18 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
         return transform.Cast<Transform>().Count(child => child.GetComponent<PlayerPart>().IsAttached);
     }
 
+    public Tuple<GameObject, GameObject> GetTwoRandomParts() {
+        var allParts = transform.Cast<Transform>().Where(child => child.GetComponent<PlayerPart>().IsAttached).ToList();
+        switch (allParts.Count) {
+            case 0: return new Tuple<GameObject, GameObject>(null, null);
+            case 1: return new Tuple<GameObject, GameObject>(allParts[0].gameObject, null);
+            case 2: return new Tuple<GameObject, GameObject>(allParts[0].gameObject, allParts[1].gameObject);
+            default:
+                var (first, second) = Utils.GetTwoRandomUniqueNumbers(allParts.Count);
+                return new Tuple<GameObject, GameObject>(allParts[first].gameObject, allParts[second].gameObject);
+        }
+    }
+
     public int GetSpeedUpCount() {
         return transform.Cast<Transform>().Count(child => {
             var playerPartComp = child.GetComponent<PlayerPart>();

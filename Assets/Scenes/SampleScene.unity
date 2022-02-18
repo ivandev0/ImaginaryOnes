@@ -378,12 +378,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - probabilities:
+    - 0.3333333
+    - 0.3333333
     - 0
     - 0
     - 0
-    - 1
-    - 0
-    - 0
+    - 0.3333333
     partsCount: 2
     spawnWait: 1
     waveWait: 2

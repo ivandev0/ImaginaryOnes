@@ -87,7 +87,7 @@ public class GameController : Singleton<GameController> {
     }
 
     private void SetScore() {
-        scoreText.GetComponent<Text>().text = "Score: " + score;
+        scoreText.GetComponent<Text>().text = "Score: " + Mathf.FloorToInt(score);
     }
 
     private IEnumerator CountScore() {

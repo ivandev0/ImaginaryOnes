@@ -18,7 +18,7 @@ public class PlayerPart : ObjectWithBorder {
     public bool IsSlowDown { get; set; }
     public bool IsProtected { get; set; }
     public bool IsInvisible { get; set; }
-    public bool IsImposter;
+    public bool IsImposter { get; set; }
 
     private static readonly int texture = Shader.PropertyToID("Texture");
 
@@ -76,6 +76,12 @@ public class PlayerPart : ObjectWithBorder {
 
     private void OnTriggerEnter(Collider other) {
         if (!other.gameObject.CompareTag("Player")) return;
+        if (IsImposter) {
+            sphereCollider.isTrigger = false;
+            Betray();
+            return;
+        }
+
         sphereCollider.radius = radius;
         sphereCollider.isTrigger = false;
         IsAttached = true;
@@ -92,5 +98,42 @@ public class PlayerPart : ObjectWithBorder {
         IsProtected = false;
         StartCoroutine(MakeInvincible(0.25f));
         GetComponent<MeshRenderer>().material.SetTexture(texture, null);
+    }
+
+    private void Betray() {
+        var (first, second) = PlayerPartsController.Instance.GetTwoRandomParts();
+        if (first == null && second == null) {
+            StartCoroutine(MoveAlong((transform.position - player.transform.position).normalized));
+        } else if (first == null || second == null) {
+            var obj = first == null ? second : first;
+            var center = (obj.transform.position + transform.position) / 2;
+            StartCoroutine(obj.GetComponent<PlayerPart>().MoveAlong((obj.transform.position - center).normalized));
+            StartCoroutine(MoveAlong((transform.position - center).normalized));
+        } else {
+            var center = (first.transform.position + second.transform.position + transform.position) / 3;
+            StartCoroutine(first.GetComponent<PlayerPart>().MoveAlong((first.transform.position - center).normalized));
+            StartCoroutine(second.GetComponent<PlayerPart>().MoveAlong((second.transform.position - center).normalized));
+            StartCoroutine(MoveAlong((transform.position - center).normalized));
+        }
+    }
+
+    // TODO change material
+    private IEnumerator MoveAlong(Vector3 vector) {
+        IsAttached = false;
+        sphereCollider.enabled = false;
+
+        var endValue = transform.position + vector * 10;
+        var totalDistance = (transform.position - endValue).sqrMagnitude;
+        var distance = totalDistance;
+        while (distance > 1e-1) {
+            float t = 1 - distance / totalDistance;
+            t = t * t * (3f - 2f * t);
+            rigidbody.velocity = vector * (10 * t + 1);
+
+            distance = (transform.position - endValue).sqrMagnitude;
+            yield return null;
+        }
+
+        Destroy(gameObject);
     }
 }
