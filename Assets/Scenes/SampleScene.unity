@@ -376,10 +376,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29c8691a256a4d6eb01bb9ee63b650cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partsCount: 2
-  spawnWait: 1
-  waveWait: 2
+  stats:
+  - probabilities:
+    - 0.25
+    - 0.25
+    - 0.25
+    - 0.25
+    - 0
+    - 0
+    partsCount: 2
+    spawnWait: 1
+    waveWait: 2
   playerPart: {fileID: 439513192472124121, guid: f588fb882bbf2c5459e89fca4555e061, type: 3}
+  commonMat: {fileID: 2100000, guid: 307b28ad810bed4489e9bbc5dcbaced5, type: 2}
+  speedUpMat: {fileID: 2100000, guid: 2bdcc375988107648b09475c04451201, type: 2}
+  slowDownMat: {fileID: 2100000, guid: 43f385783fcfec64bbcfb0a29764bced, type: 2}
+  protectedMat: {fileID: 2100000, guid: dc4171dcb51e63449964007031f215a4, type: 2}
+  invisibleMat: {fileID: 2100000, guid: 0e35fc710a245d242bcd97d315d6df46, type: 2}
+  imposterMat: {fileID: 2100000, guid: 6f42a98bd6216154588920ccdd652a14, type: 2}
 --- !u!4 &431613327
 Transform:
   m_ObjectHideFlags: 0
@@ -1283,7 +1297,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0

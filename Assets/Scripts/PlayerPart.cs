@@ -11,6 +11,11 @@ public class PlayerPart : ObjectWithBorder {
 
     public bool IsAttached { get; private set; } = false;
     private bool isDestroyed = false;
+    public bool IsSpeedUp = false;
+    public bool IsSlowDown = false;
+    public bool IsProtected = false;
+    public bool IsInvisible = false;
+    public bool IsImposter = false;
 
     new void Start() {
         base.Start();
