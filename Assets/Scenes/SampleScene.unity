@@ -378,12 +378,82 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - probabilities:
-    - 0.3333333
-    - 0.3333333
-    - 0
-    - 0
-    - 0
-    - 0.3333333
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    partsCount: 2
+    spawnWait: 1
+    waveWait: 2
+  - probabilities:
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    partsCount: 2
+    spawnWait: 1
+    waveWait: 2
+  - probabilities:
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    partsCount: 2
+    spawnWait: 1
+    waveWait: 2
+  - probabilities:
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    partsCount: 2
+    spawnWait: 1
+    waveWait: 2
+  - probabilities:
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    partsCount: 2
+    spawnWait: 1
+    waveWait: 2
+  - probabilities:
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    partsCount: 2
+    spawnWait: 1
+    waveWait: 2
+  - probabilities:
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    partsCount: 2
+    spawnWait: 1
+    waveWait: 2
+  - probabilities:
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
+    - 0.16666666
     partsCount: 2
     spawnWait: 1
     waveWait: 2
@@ -528,13 +598,130 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7ca2595b69a8de45804432d87ad0360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nailsCount: 1
-  spawnWait: 1
-  waveWait: 2
-  nail: {fileID: 2127754698413715858, guid: bbf3c0fe2aa08114e98c0a973368619c, type: 3}
-  rocket: {fileID: 8137218952119955934, guid: 4c37833b9eaeedf4ca11b5544b61c10d, type: 3}
-  cloud: {fileID: 3983320729658018539, guid: f40f4679b5e316c4d878a27bfbc32ddc, type: 3}
-  boomerang: {fileID: 2592890660476446095, guid: f8db19571e49f854fa4d88ba92ecdfb9, type: 3}
+  enemiesByLevels:
+  - enemies:
+    - waves:
+      - enemies:
+        - {fileID: 2127754698413715858, guid: bbf3c0fe2aa08114e98c0a973368619c, type: 3}
+        positions: []
+        evenlyDistributed: 0
+        spawnRate: 0
+      waveDelay: 0
+    probabilities:
+    - 1
+    spawnDelay: 2
+  - enemies:
+    - waves:
+      - enemies:
+        - {fileID: 2127754698413715858, guid: bbf3c0fe2aa08114e98c0a973368619c, type: 3}
+        positions: []
+        evenlyDistributed: 0
+        spawnRate: 0
+      waveDelay: 0
+    - waves:
+      - enemies:
+        - {fileID: 8137218952119955934, guid: 4c37833b9eaeedf4ca11b5544b61c10d, type: 3}
+        positions: []
+        evenlyDistributed: 0
+        spawnRate: 0
+      waveDelay: 0
+    probabilities:
+    - 0.8
+    - 0.2
+    spawnDelay: 1.75
+  - enemies:
+    - waves:
+      - enemies:
+        - {fileID: 2127754698413715858, guid: bbf3c0fe2aa08114e98c0a973368619c, type: 3}
+        positions: []
+        evenlyDistributed: 0
+        spawnRate: 0
+      waveDelay: 0
+    - waves:
+      - enemies:
+        - {fileID: 8137218952119955934, guid: 4c37833b9eaeedf4ca11b5544b61c10d, type: 3}
+        positions: []
+        evenlyDistributed: 0
+        spawnRate: 0
+      waveDelay: 0
+    - waves:
+      - enemies:
+        - {fileID: 2592890660476446095, guid: f8db19571e49f854fa4d88ba92ecdfb9, type: 3}
+        positions:
+        - {x: 0, y: 0, z: 0}
+        evenlyDistributed: 0
+        spawnRate: 0
+      waveDelay: 0
+    probabilities:
+    - 0.5
+    - 0.3
+    - 0.2
+    spawnDelay: 1.5
+  - enemies:
+    - waves:
+      - enemies:
+        - {fileID: 2127754698413715858, guid: bbf3c0fe2aa08114e98c0a973368619c, type: 3}
+        - {fileID: 2127754698413715858, guid: bbf3c0fe2aa08114e98c0a973368619c, type: 3}
+        positions: []
+        evenlyDistributed: 0
+        spawnRate: 0
+      waveDelay: 0
+    - waves:
+      - enemies:
+        - {fileID: 8137218952119955934, guid: 4c37833b9eaeedf4ca11b5544b61c10d, type: 3}
+        positions: []
+        evenlyDistributed: 0
+        spawnRate: 0
+      waveDelay: 0
+    - waves:
+      - enemies:
+        - {fileID: 2592890660476446095, guid: f8db19571e49f854fa4d88ba92ecdfb9, type: 3}
+        positions:
+        - {x: 0, y: 0, z: 0}
+        evenlyDistributed: 0
+        spawnRate: 0
+      waveDelay: 0
+    - waves:
+      - enemies:
+        - {fileID: 3983320729658018539, guid: f40f4679b5e316c4d878a27bfbc32ddc, type: 3}
+        positions: []
+        evenlyDistributed: 0
+        spawnRate: 0
+      waveDelay: 0
+    probabilities:
+    - 0.3
+    - 0.3
+    - 0.3
+    - 0.1
+    spawnDelay: 1.5
+  - enemies: []
+    probabilities:
+    - 0.3
+    - 0.3
+    - 0.3
+    - 0.1
+    spawnDelay: 0
+  - enemies: []
+    probabilities:
+    - 0.3
+    - 0.3
+    - 0.3
+    - 0.1
+    spawnDelay: 0
+  - enemies: []
+    probabilities:
+    - 0.3
+    - 0.3
+    - 0.3
+    - 0.1
+    spawnDelay: 0
+  - enemies: []
+    probabilities:
+    - 0.3
+    - 0.3
+    - 0.3
+    - 0.1
+    spawnDelay: 0
 --- !u!1 &1219993095
 GameObject:
   m_ObjectHideFlags: 0

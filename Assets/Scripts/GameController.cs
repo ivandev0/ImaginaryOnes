@@ -14,7 +14,8 @@ public class GameController : Singleton<GameController> {
     private float localGameSpeed = 1.0f;
     public float gameSpeed = 1.0f;
     public int gameLevel = 0;
-    public const int maxGameLevel = 0;
+    private const int maxLocalGameSpeed = 2;
+    public const int maxGameLevel = 7;
 
     private bool isBegin = true;
     private bool isPlay, isPause, isEnd;
@@ -23,6 +24,7 @@ public class GameController : Singleton<GameController> {
     private Coroutine partsSpawnRoutine;
     private Coroutine scoreRoutine;
     private Coroutine gameLevelRoutine;
+    private Coroutine increaseGameSpeedRoutine;
 
     void Start() {
         playButton.SetActive(true);
@@ -45,7 +47,7 @@ public class GameController : Singleton<GameController> {
         playButton.SetActive(false);
         gameOverView.SetActive(false);
         scoreText.SetActive(true);
-        score = 0;
+        score = gameLevel = 0;
         gameSpeed = localGameSpeed = 1;
         SetScore();
 
@@ -61,6 +63,7 @@ public class GameController : Singleton<GameController> {
             partsSpawnRoutine = StartCoroutine(PlayerPartsController.Instance.SpawnWaves());
             scoreRoutine = StartCoroutine(CountScore());
             gameLevelRoutine = StartCoroutine(GameLevelRoutine());
+            increaseGameSpeedRoutine = StartCoroutine(IncreaseGameSpeed());
         });
     }
 
@@ -70,6 +73,7 @@ public class GameController : Singleton<GameController> {
         StopCoroutine(partsSpawnRoutine);
         StopCoroutine(scoreRoutine);
         if (gameLevelRoutine != null) StopCoroutine(gameLevelRoutine);
+        if (increaseGameSpeedRoutine != null) StopCoroutine(increaseGameSpeedRoutine);
 
         foreach (var unattachedPlayerPart in GameObject.FindGameObjectsWithTag("UnattachedPlayerPart")) {
             unattachedPlayerPart.GetComponent<PlayerPart>().BlowUp(null, () => { Destroy(unattachedPlayerPart); });
@@ -82,7 +86,7 @@ public class GameController : Singleton<GameController> {
             isEnd = true;
             gameOverView.SetActive(true);
             scoreText.SetActive(false);
-            gameOverView.GetComponentInChildren<Text>().text = "Score: " + score;
+            gameOverView.GetComponentInChildren<Text>().text = "Score: " + Mathf.FloorToInt(score);
         });
     }
 
@@ -102,6 +106,13 @@ public class GameController : Singleton<GameController> {
         while (GameIsOn() && gameLevel < maxGameLevel) {
             yield return new WaitForSeconds(deltaNextLevel + gameLevel * offsetNextLevel);
             gameLevel++;
+        }
+    }
+
+    private IEnumerator IncreaseGameSpeed() {
+        while (GameIsOn() && localGameSpeed < maxLocalGameSpeed) {
+            yield return new WaitForSeconds(1f);
+            localGameSpeed += 0.1f;
         }
     }
 }

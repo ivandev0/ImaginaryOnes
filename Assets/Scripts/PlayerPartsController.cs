@@ -29,7 +29,7 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
     void Start() {
         var verticalExtent = Camera.main.orthographicSize;
         var horizontalExtent = verticalExtent * Screen.width / Screen.height;
-        spawnValues = new Vector3(horizontalExtent / 2, verticalExtent * 1.5f, 0);
+        spawnValues = new Vector3(horizontalExtent, verticalExtent * 1.5f, 0);
 
         materials = new[] { commonMat, speedUpMat, slowDownMat, protectedMat, invisibleMat, imposterMat };
 
@@ -94,26 +94,8 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
         });
     }
 
-    private int GetNextPartIndex(LevelStats stat) {
-        var cumulativeProbs = new float[stat.probabilities.Length];
-        cumulativeProbs[0] = stat.probabilities[0];
-        for (int i = 1; i < stat.probabilities.Length; i++) {
-            cumulativeProbs[i] = cumulativeProbs[i - 1] + stat.probabilities[i];
-        }
-
-        var rnd = Random.Range(0.0f, 1.0f);
-        for (var i = 0; i < cumulativeProbs.Length; i++) {
-            if (cumulativeProbs[i] > rnd) {
-                return i;
-            }
-        }
-
-        // Not reachable
-        return cumulativeProbs.Length - 1;
-    }
-
     private GameObject GetNextPart(LevelStats stat, Vector3 position) {
-        var index = GetNextPartIndex(stat);
+        var index = Utils.GetRandomIndexWithGivenProbabilities(stat.probabilities);
         var obj = Instantiate(playerPart, position, Quaternion.identity, transform);
         var material = materials[index];
         obj.GetComponent<MeshRenderer>().material = material;

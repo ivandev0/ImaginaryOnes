@@ -11,7 +11,7 @@ public class Border : MonoBehaviour {
         var horizontalExtent = verticalExtent * Screen.width / Screen.height;
 
         transform.position = new Vector3(0, -verticalExtent * 1.5f, 0);
-        boxCollider.size = new Vector3(horizontalExtent, 1f, 1f);
+        boxCollider.size = new Vector3(2 * horizontalExtent, 1f, 1f);
     }
 
     void Update()

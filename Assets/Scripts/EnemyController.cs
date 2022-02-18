@@ -1,52 +1,77 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [System.Serializable]
-public class EnemiesByLevel {
+public class Waves {
     public GameObject[] enemies;
+    public Vector3[] positions;
+    public bool evenlyDistributed;
+    public float spawnRate;
 }
 
 [System.Serializable]
 public class Patterns {
-    public GameObject[] enemies;
-    public float delay;
+    public Waves[] waves;
+    public float waveDelay;
+}
+
+[System.Serializable]
+public class EnemiesByLevel {
+    public Patterns[] enemies;
+    public float[] probabilities;
+    public float spawnDelay;
 }
 
 public class EnemyController : Singleton<EnemyController> {
-    public int nailsCount = 2;
-    public float spawnWait = 1.0f;
-    public float waveWait = 2.0f;
-    public GameObject nail;
-    public GameObject rocket;
-    public GameObject cloud;
-    public GameObject boomerang;
+    public EnemiesByLevel[] enemiesByLevels;
 
     private Vector3 spawnValues;
 
     void Start() {
         var verticalExtent = Camera.main.orthographicSize;
         var horizontalExtent = verticalExtent * Screen.width / Screen.height;
+        spawnValues = new Vector3(horizontalExtent, verticalExtent * 1.5f, 0);
 
-        spawnValues = new Vector3(horizontalExtent / 2, verticalExtent * 1.5f, 0);
-    }
-
-    void Update() {
-        
+        if (enemiesByLevels.Length != GameController.maxGameLevel + 1) {
+            throw new ArgumentException("Enemies description must be equal to (maxGameLevel + 1)");
+        }
     }
 
     public IEnumerator SpawnWaves() {
-        var enemies = new[] { nail,/* rocket, cloud, boomerang*/ };
         while (GameController.Instance.GameIsOn()) {
-            foreach (var enemy in enemies) {
-                for (var i = 0; i < nailsCount; i++) {
-                    var spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-                    var spawnRotation = enemy.transform.rotation;
-                    Instantiate(enemy, spawnPosition, spawnRotation);
-                    yield return new WaitForSeconds(spawnWait);
+            var enemiesForThisLevel = enemiesByLevels[GameController.Instance.gameLevel];
+            var index = Utils.GetRandomIndexWithGivenProbabilities(enemiesForThisLevel.probabilities);
+            var pattern = enemiesForThisLevel.enemies[index];
+
+            for (var i = 0; i < pattern.waves.Length; i++) {
+                var wave = pattern.waves[i];
+                for (int j = 0; j < wave.enemies.Length; j++) {
+                    if (wave.evenlyDistributed) {
+                        // TODO
+                    } else {
+                        if (wave.positions.Length == wave.enemies.Length) {
+                            var spawnPosition = new Vector3(wave.positions[j].x, spawnValues.y, spawnValues.z);
+                            var spawnRotation = wave.enemies[j].transform.rotation;
+                            Instantiate(wave.enemies[j], spawnPosition, spawnRotation);
+                        } else {
+                            var spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+                            var spawnRotation = wave.enemies[j].transform.rotation;
+                            Instantiate(wave.enemies[j], spawnPosition, spawnRotation);
+                        }
+                    }
+
+                    if (wave.spawnRate != 0) {
+                        yield return new WaitForSeconds(wave.spawnRate);
+                    }
+                }
+
+                if (i != pattern.waves.Length - 1) {
+                    yield return new WaitForSeconds(pattern.waveDelay);
                 }
             }
-            yield return new WaitForSeconds(waveWait);
+            yield return new WaitForSeconds(enemiesForThisLevel.spawnDelay);
         }
     }
 }
