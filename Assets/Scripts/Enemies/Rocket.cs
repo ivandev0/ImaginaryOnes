@@ -13,22 +13,24 @@ namespace Enemies {
         }
 
         void Update() {
-            rigidbody.velocity = -transform.up * speed;
+            rigidbody.velocity = Vector3.down * speed * GameController.Instance.gameSpeed;
         }
 
         private void OnTriggerEnter(Collider other) {
+            if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("PlayerPart")) return;
             var selected = Physics.OverlapSphere(other.gameObject.transform.position, blowRadius);
             if (selected.Any(it => it.gameObject.CompareTag("Player"))) {
                 GameController.Instance.GameOver();
             } else {
                 var partsToExplode = selected.Where(it => it.gameObject.CompareTag("PlayerPart")).ToList();
                 foreach (var col in partsToExplode) {
-                    col.gameObject.GetComponent<PlayerPart>().BlowUp(() => {
+                    col.gameObject.GetComponent<PlayerPart>().BlowUp(EnemyType.Rocket, () => {
                         foreach (var col in partsToExplode) {
                             Destroy(col.gameObject);
                         }
                     });
                 }
+
                 Destroy(gameObject);
             }
         }

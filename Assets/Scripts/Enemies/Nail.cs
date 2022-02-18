@@ -11,14 +11,14 @@ namespace Enemies {
         }
 
         void Update() {
-            rigidbody.velocity = -transform.up * speed;
+            rigidbody.velocity = Vector3.down * speed * GameController.Instance.gameSpeed;
         }
 
         private void OnTriggerEnter(Collider other) {
             if (other.gameObject.CompareTag("Player")) {
                 GameController.Instance.GameOver();
             } else if (other.gameObject.CompareTag("PlayerPart")) {
-                other.gameObject.GetComponent<PlayerPart>().BlowUp(() => { Destroy(other.gameObject); });
+                other.gameObject.GetComponent<PlayerPart>().BlowUp(EnemyType.Nail, () => { Destroy(other.gameObject); });
             }
         }
     }

@@ -14,7 +14,9 @@ namespace Enemies {
         }
 
         void Update() {
-            transform.position = new Vector3( center.x + movementRadiusX * Mathf.Cos(angle), -speedY, 0);
+            var x = center.x + movementRadiusX * Mathf.Cos(angle);
+            var y = transform.position.y - Time.deltaTime * speedY * GameController.Instance.gameSpeed;
+            transform.position = new Vector3(x, y, 0);
             angle += speedX * Time.deltaTime;
             angle %= 360;
         }
@@ -23,7 +25,7 @@ namespace Enemies {
             if (other.gameObject.CompareTag("Player")) {
                 GameController.Instance.GameOver();
             } else if (other.gameObject.CompareTag("PlayerPart")) {
-                other.gameObject.GetComponent<PlayerPart>().BlowUp(() => { Destroy(other.gameObject); });
+                other.gameObject.GetComponent<PlayerPart>().BlowUp(EnemyType.Cloud, () => { Destroy(other.gameObject); });
             }
         }
     }

@@ -817,7 +817,7 @@
     },
     "m_Name": "Albedo",
     "m_DefaultReferenceName": "Texture2D_6d21f161747d4628a0598e8579f29948",
-    "m_OverrideReferenceName": "",
+    "m_OverrideReferenceName": "Texture",
     "m_GeneratePropertyBlock": true,
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,

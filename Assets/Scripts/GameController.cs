@@ -11,9 +11,10 @@ public class GameController : Singleton<GameController> {
     public float deltaNextLevel = 10;
     public float offsetNextLevel = 5;
 
+    private float localGameSpeed = 1.0f;
     public float gameSpeed = 1.0f;
     public int gameLevel = 0;
-    private const int maxGameLevel = 7;
+    public const int maxGameLevel = 0;
 
     private bool isBegin = true;
     private bool isPlay, isPause, isEnd;
@@ -31,7 +32,9 @@ public class GameController : Singleton<GameController> {
     }
 
     void Update() {
-        
+        var speedUp = PlayerPartsController.Instance.GetSpeedUpCount() * 0.05f;
+        var slowDown = PlayerPartsController.Instance.GetSlowDownCount() * 0.05f;
+        gameSpeed = Mathf.Clamp(localGameSpeed + speedUp - slowDown, 0.5f, float.MaxValue);
     }
 
     public bool GameIsOn() {
@@ -43,6 +46,7 @@ public class GameController : Singleton<GameController> {
         gameOverView.SetActive(false);
         scoreText.SetActive(true);
         score = 0;
+        gameSpeed = localGameSpeed = 1;
         SetScore();
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy")) {
@@ -65,13 +69,13 @@ public class GameController : Singleton<GameController> {
         StopCoroutine(enemySpawnRoutine);
         StopCoroutine(partsSpawnRoutine);
         StopCoroutine(scoreRoutine);
-        StopCoroutine(gameLevelRoutine);
+        if (gameLevelRoutine != null) StopCoroutine(gameLevelRoutine);
 
         foreach (var unattachedPlayerPart in GameObject.FindGameObjectsWithTag("UnattachedPlayerPart")) {
-            unattachedPlayerPart.GetComponent<PlayerPart>().BlowUp(() => { Destroy(unattachedPlayerPart); });
+            unattachedPlayerPart.GetComponent<PlayerPart>().BlowUp(null, () => { Destroy(unattachedPlayerPart); });
         }
         foreach (var playerPart in GameObject.FindGameObjectsWithTag("PlayerPart")) {
-            playerPart.GetComponent<PlayerPart>().BlowUp(() => { Destroy(playerPart); });
+            playerPart.GetComponent<PlayerPart>().BlowUp(null, () => { Destroy(playerPart); });
         }
 
         player.GetComponent<PlayerController>().BlowUp(() => {

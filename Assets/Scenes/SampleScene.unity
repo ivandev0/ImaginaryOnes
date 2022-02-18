@@ -378,10 +378,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - probabilities:
-    - 0.25
-    - 0.25
-    - 0.25
-    - 0.25
+    - 0
+    - 0
+    - 0
+    - 1
     - 0
     - 0
     partsCount: 2
@@ -531,8 +531,8 @@ MonoBehaviour:
   nailsCount: 1
   spawnWait: 1
   waveWait: 2
-  nail: {fileID: 3758040227696466693, guid: 65db08994b906644cbd0e8c37eb46e4a, type: 3}
-  rocket: {fileID: 7815452260863958655, guid: 8f653bc743268bb439d0b60c0bd50078, type: 3}
+  nail: {fileID: 2127754698413715858, guid: bbf3c0fe2aa08114e98c0a973368619c, type: 3}
+  rocket: {fileID: 8137218952119955934, guid: 4c37833b9eaeedf4ca11b5544b61c10d, type: 3}
   cloud: {fileID: 3983320729658018539, guid: f40f4679b5e316c4d878a27bfbc32ddc, type: 3}
   boomerang: {fileID: 2592890660476446095, guid: f8db19571e49f854fa4d88ba92ecdfb9, type: 3}
 --- !u!1 &1219993095

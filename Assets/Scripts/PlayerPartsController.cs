@@ -68,6 +68,20 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
         return transform.Cast<Transform>().Count(child => child.GetComponent<PlayerPart>().IsAttached);
     }
 
+    public int GetSpeedUpCount() {
+        return transform.Cast<Transform>().Count(child => {
+            var playerPartComp = child.GetComponent<PlayerPart>();
+            return playerPartComp.IsAttached && playerPartComp.IsSpeedUp;
+        });
+    }
+
+    public int GetSlowDownCount() {
+        return transform.Cast<Transform>().Count(child => {
+            var playerPartComp = child.GetComponent<PlayerPart>();
+            return playerPartComp.IsAttached && playerPartComp.IsSlowDown;
+        });
+    }
+
     private int GetNextPartIndex(LevelStats stat) {
         var cumulativeProbs = new float[stat.probabilities.Length];
         cumulativeProbs[0] = stat.probabilities[0];

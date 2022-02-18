@@ -36,12 +36,15 @@ public class EnemyController : Singleton<EnemyController> {
     }
 
     public IEnumerator SpawnWaves() {
+        var enemies = new[] { nail,/* rocket, cloud, boomerang*/ };
         while (GameController.Instance.GameIsOn()) {
-            for (var i = 0; i < nailsCount; i++) {
-                var spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-                var spawnRotation = boomerang.transform.rotation;
-                Instantiate(boomerang, spawnPosition, spawnRotation);
-                yield return new WaitForSeconds(spawnWait);
+            foreach (var enemy in enemies) {
+                for (var i = 0; i < nailsCount; i++) {
+                    var spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+                    var spawnRotation = enemy.transform.rotation;
+                    Instantiate(enemy, spawnPosition, spawnRotation);
+                    yield return new WaitForSeconds(spawnWait);
+                }
             }
             yield return new WaitForSeconds(waveWait);
         }

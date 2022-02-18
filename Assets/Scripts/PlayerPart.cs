@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using Enemies;
 using UnityEngine;
 
 public class PlayerPart : ObjectWithBorder {
@@ -9,13 +11,16 @@ public class PlayerPart : ObjectWithBorder {
     private float radius;
     private float playerRadius;
 
-    public bool IsAttached { get; private set; } = false;
-    private bool isDestroyed = false;
-    public bool IsSpeedUp = false;
-    public bool IsSlowDown = false;
-    public bool IsProtected = false;
-    public bool IsInvisible = false;
-    public bool IsImposter = false;
+    public bool IsAttached { get; private set; }
+    private bool IsDestroyed { get; set; }
+    private bool IsInvincible { get; set; }
+    public bool IsSpeedUp { get; set; }
+    public bool IsSlowDown { get; set; }
+    public bool IsProtected { get; set; }
+    public bool IsInvisible { get; set; }
+    public bool IsImposter;
+
+    private static readonly int texture = Shader.PropertyToID("Texture");
 
     new void Start() {
         base.Start();
@@ -51,9 +56,21 @@ public class PlayerPart : ObjectWithBorder {
         return distance * Mathf.Log(distance);
     }
 
-    public void BlowUp(Action atTheEnd) {
-        if (isDestroyed) return;
-        isDestroyed = true;
+    public void BlowUp(EnemyType? enemy, Action atTheEnd) {
+        if (IsDestroyed || IsInvincible) return;
+        switch (enemy) {
+            case EnemyType.Nail:
+            case EnemyType.Rocket:
+            case EnemyType.Boomerang:
+                if (IsProtected) { RemoveProtection(); return; }
+                if (IsInvisible) return;
+                break;
+            case EnemyType.Cloud:
+            case null: break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(enemy), enemy, null);
+        }
+        IsDestroyed = true;
         StartCoroutine(Explosive.BlowUp(gameObject, atTheEnd));
     }
 
@@ -63,5 +80,17 @@ public class PlayerPart : ObjectWithBorder {
         sphereCollider.isTrigger = false;
         IsAttached = true;
         gameObject.tag = "PlayerPart";
+    }
+
+    private IEnumerator MakeInvincible(float time) {
+        IsInvincible = true;
+        yield return new WaitForSeconds(time);
+        IsInvincible = false;
+    }
+
+    private void RemoveProtection() {
+        IsProtected = false;
+        StartCoroutine(MakeInvincible(0.25f));
+        GetComponent<MeshRenderer>().material.SetTexture(texture, null);
     }
 }
