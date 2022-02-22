@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -6,14 +7,35 @@ namespace Enemies {
         public float speed;
         public float blowRadius;
 
+        private bool ready;
+
         private new Rigidbody rigidbody;
 
         void Start() {
             rigidbody = GetComponent<Rigidbody>();
+            StartCoroutine(MoveToStartPosition());
         }
 
         void Update() {
+            if (!ready) return;
             rigidbody.velocity = Vector3.down * speed * GameController.Instance.gameSpeed;
+        }
+
+        private IEnumerator MoveToStartPosition() {
+            var cameraSize = Camera.main.orthographicSize;
+            var height = GetComponent<CapsuleCollider>().height * transform.localScale.y;
+            var start = transform.position;
+            var end = new Vector3(start.x, cameraSize - height / 1.5f, 0);
+            float t = 0;
+
+            while ((transform.position - end).sqrMagnitude > 0.0001f) {
+                transform.position = Vector3.Lerp(start, end, t);
+                t += 0.5f * Time.deltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+
+            yield return new WaitForSeconds(1.0f);
+            ready = true;
         }
 
         private void OnTriggerEnter(Collider other) {
