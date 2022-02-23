@@ -30,8 +30,11 @@ namespace Enemies {
 			if (other.gameObject.CompareTag("Player")) {
 				GameController.Instance.GameOver();
 			} else if (other.gameObject.CompareTag("PlayerPart")) {
-				other.gameObject.GetComponent<PlayerPart>()
+				var wasTouched = other.gameObject.GetComponent<PlayerPart>()
 					.BlowUp(EnemyType.Boomerang, () => { Destroy(other.gameObject); });
+				if (wasTouched) {
+					Destroy(gameObject);
+				}
 			}
 		}
 	}

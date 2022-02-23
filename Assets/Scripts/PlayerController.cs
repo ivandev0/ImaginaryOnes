@@ -9,6 +9,7 @@ public class PlayerController : ObjectWithBorder {
     private float radius;
     private Material material;
     private Vector3 initPosition;
+    private Vector3 initScale;
     private const float movementSpeed = 20.0f;
 
     protected new void Start() {
@@ -18,6 +19,7 @@ public class PlayerController : ObjectWithBorder {
         radius = GetComponent<SphereCollider>().radius * transform.localScale.x;
         material = GetComponent<MeshRenderer>().material;
         initPosition = transform.position;
+        initScale = transform.localScale;
     }
 
     void Update() {
@@ -32,7 +34,7 @@ public class PlayerController : ObjectWithBorder {
     public void MoveToTheScreenCenter(Action atTheEnd) {
         material.SetFloat(Explosive.dissolve, 0);
         transform.position = initPosition;
-        transform.localScale = Vector3.one;
+        transform.localScale = initScale;
         StartCoroutine(MoveToTheScreenCenterRoutine(atTheEnd));
     }
 

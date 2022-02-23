@@ -40,11 +40,14 @@ namespace Enemies {
 
         private void OnTriggerEnter(Collider other) {
             if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("PlayerPart")) return;
+            if (other.GetComponent<PlayerPart>()?.IsInvisible == true) return;
             var selected = Physics.OverlapSphere(other.gameObject.transform.position, blowRadius);
             if (selected.Any(it => it.gameObject.CompareTag("Player"))) {
                 GameController.Instance.GameOver();
             } else {
-                var partsToExplode = selected.Where(it => it.gameObject.CompareTag("PlayerPart")).ToList();
+                var partsToExplode = selected.Where(it => it.gameObject.CompareTag("PlayerPart"))
+                    .Where(it => !it.gameObject.GetComponent<PlayerPart>().IsInvisible)
+                    .ToList();
                 foreach (var col in partsToExplode) {
                     col.gameObject.GetComponent<PlayerPart>().BlowUp(EnemyType.Rocket, () => {
                         foreach (var col in partsToExplode) {

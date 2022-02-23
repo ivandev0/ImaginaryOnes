@@ -29,7 +29,7 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
     void Start() {
         var verticalExtent = Camera.main.orthographicSize;
         var horizontalExtent = verticalExtent * Screen.width / Screen.height;
-        spawnValues = new Vector3(horizontalExtent, verticalExtent * 1.5f, 0);
+        spawnValues = new Vector3(horizontalExtent * 0.95f, verticalExtent * 1.5f, 0);
 
         materials = new[] { commonMat, speedUpMat, slowDownMat, protectedMat, invisibleMat, imposterMat };
 

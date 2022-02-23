@@ -27,8 +27,8 @@ public class PlayerPart : ObjectWithBorder {
         player = GameObject.FindGameObjectWithTag("Player");
         rigidbody = GetComponent<Rigidbody>();
         sphereCollider = GetComponent<SphereCollider>();
-        radius = sphereCollider.radius * player.transform.localScale.x;
-        playerRadius = sphereCollider.radius * transform.localScale.x;
+        radius = sphereCollider.radius;
+        playerRadius = player.GetComponent<SphereCollider>().radius;
 
         sphereCollider.radius *= 6;
     }
@@ -56,14 +56,14 @@ public class PlayerPart : ObjectWithBorder {
         return distance * Mathf.Log(distance);
     }
 
-    public void BlowUp(EnemyType? enemy, Action atTheEnd) {
-        if (IsDestroyed || IsInvincible) return;
+    public bool BlowUp(EnemyType? enemy, Action atTheEnd) {
+        if (IsDestroyed || IsInvincible) return false;
         switch (enemy) {
             case EnemyType.Nail:
             case EnemyType.Rocket:
             case EnemyType.Boomerang:
-                if (IsProtected) { RemoveProtection(); return; }
-                if (IsInvisible) return;
+                if (IsProtected) { RemoveProtection(); return true; }
+                if (IsInvisible) return false;
                 break;
             case EnemyType.Cloud:
             case null: break;
@@ -72,6 +72,7 @@ public class PlayerPart : ObjectWithBorder {
         }
         IsDestroyed = true;
         StartCoroutine(Explosive.BlowUp(gameObject, atTheEnd));
+        return true;
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -125,7 +126,7 @@ public class PlayerPart : ObjectWithBorder {
         var endValue = transform.position + vector * 10;
         var totalDistance = (transform.position - endValue).sqrMagnitude;
         var distance = totalDistance;
-        while (distance > 1e-1) {
+        while (distance > 1e-1 && !IsDestroyed) {
             float t = 1 - distance / totalDistance;
             t = t * t * (3f - 2f * t);
             rigidbody.velocity = vector * (10 * t + 1);

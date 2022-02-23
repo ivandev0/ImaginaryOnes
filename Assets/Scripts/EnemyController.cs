@@ -32,7 +32,7 @@ public class EnemyController : Singleton<EnemyController> {
     void Start() {
         var verticalExtent = Camera.main.orthographicSize;
         var horizontalExtent = verticalExtent * Screen.width / Screen.height;
-        spawnValues = new Vector3(horizontalExtent, verticalExtent * 1.5f, 0);
+        spawnValues = new Vector3(horizontalExtent * 0.90f, verticalExtent * 1.5f, 0);
 
         if (enemiesByLevels.Length != GameController.maxGameLevel + 1) {
             throw new ArgumentException("Enemies description must be equal to (maxGameLevel + 1)");
@@ -48,17 +48,18 @@ public class EnemyController : Singleton<EnemyController> {
             for (var i = 0; i < pattern.waves.Length; i++) {
                 var wave = pattern.waves[i];
                 for (int j = 0; j < wave.enemies.Length; j++) {
+                    var enemy = wave.enemies[j];
                     if (wave.evenlyDistributed) {
                         // TODO
                     } else {
                         if (wave.positions.Length == wave.enemies.Length) {
                             var spawnPosition = new Vector3(wave.positions[j].x, spawnValues.y, spawnValues.z);
                             var spawnRotation = wave.enemies[j].transform.rotation;
-                            Instantiate(wave.enemies[j], spawnPosition, spawnRotation);
+                            Instantiate(enemy, spawnPosition, spawnRotation);
                         } else {
                             var spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                             var spawnRotation = wave.enemies[j].transform.rotation;
-                            Instantiate(wave.enemies[j], spawnPosition, spawnRotation);
+                            Instantiate(enemy, spawnPosition, spawnRotation);
                         }
                     }
 
