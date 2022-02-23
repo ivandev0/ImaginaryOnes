@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public static class Explosive {
-	public static readonly int dissolve = Shader.PropertyToID("Dissolve");
+	private static readonly int dissolve = Shader.PropertyToID("Dissolve");
+	private static readonly int offset = Shader.PropertyToID("NoiseOffset");
 
 	public static IEnumerator BlowUp(GameObject gameObject, Action atTheEnd) {
 		gameObject.GetComponent<Collider>().isTrigger = true;
@@ -11,8 +13,9 @@ public static class Explosive {
 		var initScale = gameObject.transform.localScale.x;
 		const int start = 0;
 		const float end = 1;
-		const float scaleCoef = 2f;
+		const float scaleCoef = 3f;
 		var material = gameObject.GetComponent<MeshRenderer>().material;
+		material.SetVector(offset, new Vector4(Random.Range(0, 10f), Random.Range(0, 10f), 0, 0));
 
 		float timeElapsed = 0;
 		const float lerpDuration = 0.25f;
@@ -31,5 +34,6 @@ public static class Explosive {
 		gameObject.GetComponent<Collider>().isTrigger = false;
 
 		atTheEnd();
+		material.SetFloat(dissolve, start);
 	}
 }

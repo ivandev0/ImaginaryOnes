@@ -19,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_6d21f161747d4628a0598e8579f29948:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -50,5 +54,7 @@ Material:
     - Vector1_7d4f6cde2cfa40e1a460737119d256a0: 0.97555524
     m_Colors:
     - Color_0cdc283699b949218082e8659ca6fa15: {r: 0.82745105, g: 0.7490196, b: 0.7058824, a: 0}
+    - NoiseOffset: {r: 0, g: 0, b: 0, a: 0}
     - Tint: {r: 0.59241724, g: 0.788018, b: 0.8113208, a: 0}
+    - Vector2_b6e33b9571a746c19c2deb59909b38d5: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

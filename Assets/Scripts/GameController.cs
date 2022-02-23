@@ -84,7 +84,6 @@ public class GameController : Singleton<GameController> {
         player.GetComponent<PlayerController>().BlowUp(() => {
             isEnd = true;
             restartButton.SetActive(true);
-            scoreText.SetActive(false);
         });
     }
 

@@ -7,7 +7,6 @@ public class PlayerController : ObjectWithBorder {
     private new Camera camera;
     private new Rigidbody rigidbody;
     private float radius;
-    private Material material;
     private Vector3 initPosition;
     private Vector3 initScale;
     private const float movementSpeed = 20.0f;
@@ -17,7 +16,6 @@ public class PlayerController : ObjectWithBorder {
         camera = Camera.main;
         rigidbody = GetComponent<Rigidbody>();
         radius = GetComponent<SphereCollider>().radius * transform.localScale.x;
-        material = GetComponent<MeshRenderer>().material;
         initPosition = transform.position;
         initScale = transform.localScale;
     }
@@ -32,9 +30,6 @@ public class PlayerController : ObjectWithBorder {
     }
 
     public void MoveToTheScreenCenter(Action atTheEnd) {
-        material.SetFloat(Explosive.dissolve, 0);
-        transform.position = initPosition;
-        transform.localScale = initScale;
         StartCoroutine(MoveToTheScreenCenterRoutine(atTheEnd));
     }
 
@@ -57,6 +52,10 @@ public class PlayerController : ObjectWithBorder {
     }
 
     public void BlowUp(Action atTheEnd) {
-        StartCoroutine(Explosive.BlowUp(gameObject, atTheEnd));
+        StartCoroutine(Explosive.BlowUp(gameObject, () => {
+            transform.position = initPosition;
+            transform.localScale = initScale;
+            atTheEnd();
+        }));
     }
 }
