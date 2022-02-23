@@ -951,7 +951,7 @@ MonoBehaviour:
   - enemies:
     - waves:
       - enemies:
-        - {fileID: 2200717539345873349, guid: 19e14dd4e5cd483429b5adbdd433be6d, type: 3}
+        - {fileID: 2127754698413715858, guid: bbf3c0fe2aa08114e98c0a973368619c, type: 3}
         positions: []
         evenlyDistributed: 0
         spawnRate: 0
