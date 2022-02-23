@@ -24,8 +24,9 @@ namespace Enemies {
         private IEnumerator MoveToStartPosition() {
             var cameraSize = Camera.main.orthographicSize;
             var height = GetComponent<CapsuleCollider>().height * transform.localScale.y;
+            var center = GetComponent<CapsuleCollider>().center.y;
             var start = transform.position;
-            var end = new Vector3(start.x, cameraSize - height / 1.5f, 0);
+            var end = new Vector3(start.x, cameraSize - height / 1.5f + center, 0);
             float t = 0;
 
             while ((transform.position - end).sqrMagnitude > 0.0001f) {
