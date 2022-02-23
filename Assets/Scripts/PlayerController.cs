@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerController : ObjectWithBorder {
     private new Camera camera;
     private new Rigidbody rigidbody;
+    private new SphereCollider collider;
     private float radius;
     private Vector3 initPosition;
     private Vector3 initScale;
@@ -15,12 +16,14 @@ public class PlayerController : ObjectWithBorder {
         base.Start();
         camera = Camera.main;
         rigidbody = GetComponent<Rigidbody>();
-        radius = GetComponent<SphereCollider>().radius * transform.localScale.x;
+        collider = GetComponent<SphereCollider>();
+        radius = collider.radius * transform.localScale.x;
         initPosition = transform.position;
         initScale = transform.localScale;
     }
 
     void Update() {
+        collider.enabled = GameController.Instance.GameIsOn();
         if (!GameController.Instance.GameIsOn()) {
             rigidbody.velocity = Vector3.zero;
             return;

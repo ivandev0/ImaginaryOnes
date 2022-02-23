@@ -31,7 +31,6 @@ public static class Explosive {
 		var endLocalScale = initScale + end * scaleCoef;
 		gameObject.transform.position = new Vector3(endLocalScale, endLocalScale, endLocalScale);
 		material.SetFloat(dissolve, end);
-		gameObject.GetComponent<Collider>().isTrigger = false;
 
 		atTheEnd();
 		material.SetFloat(dissolve, start);

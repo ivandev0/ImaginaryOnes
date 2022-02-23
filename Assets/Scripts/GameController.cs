@@ -17,8 +17,7 @@ public class GameController : Singleton<GameController> {
     private const int maxLocalGameSpeed = 2;
     public const int maxGameLevel = 7;
 
-    private bool isBegin = true;
-    private bool isPlay, isPause, isEnd;
+    private bool isBegin = true, isPlay, isPause, isEnd;
     private float score;
     private Coroutine enemySpawnRoutine;
     private Coroutine partsSpawnRoutine;
@@ -41,6 +40,10 @@ public class GameController : Singleton<GameController> {
 
     public bool GameIsOn() {
         return isPlay;
+    }
+
+    public bool GameIsActive() {
+        return isBegin || isPlay;
     }
 
     public void Begin() {
