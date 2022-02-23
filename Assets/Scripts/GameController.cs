@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameController : Singleton<GameController> {
     public GameObject player;
     public GameObject playButton;
-    public GameObject gameOverView;
+    public GameObject restartButton;
     public GameObject scoreText;
     public float deltaNextLevel = 10;
     public float offsetNextLevel = 5;
@@ -30,7 +30,7 @@ public class GameController : Singleton<GameController> {
         playButton.SetActive(true);
 
         playButton.GetComponent<Button>().onClick.AddListener(Begin);
-        gameOverView.GetComponentInChildren<Button>().onClick.AddListener(Begin);
+        restartButton.GetComponentInChildren<Button>().onClick.AddListener(Begin);
     }
 
     void Update() {
@@ -45,8 +45,7 @@ public class GameController : Singleton<GameController> {
 
     public void Begin() {
         playButton.SetActive(false);
-        gameOverView.SetActive(false);
-        scoreText.SetActive(true);
+        restartButton.SetActive(false);
         score = gameLevel = 0;
         gameSpeed = localGameSpeed = 1;
         SetScore();
@@ -84,14 +83,13 @@ public class GameController : Singleton<GameController> {
 
         player.GetComponent<PlayerController>().BlowUp(() => {
             isEnd = true;
-            gameOverView.SetActive(true);
+            restartButton.SetActive(true);
             scoreText.SetActive(false);
-            gameOverView.GetComponentInChildren<Text>().text = "Score: " + Mathf.FloorToInt(score);
         });
     }
 
     private void SetScore() {
-        scoreText.GetComponent<Text>().text = "Score: " + Mathf.FloorToInt(score);
+        scoreText.GetComponent<Text>().text = Mathf.FloorToInt(score).ToString();
     }
 
     private IEnumerator CountScore() {
