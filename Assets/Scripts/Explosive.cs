@@ -9,6 +9,7 @@ public static class Explosive {
 
 	public static IEnumerator BlowUp(GameObject gameObject, Action atTheEnd) {
 		gameObject.GetComponent<Collider>().isTrigger = true;
+		gameObject.GetComponent<ParticleSystem>()?.Play();
 
 		var initScale = gameObject.transform.localScale.x;
 		const int start = 0;
