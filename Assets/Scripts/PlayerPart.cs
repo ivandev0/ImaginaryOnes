@@ -66,7 +66,7 @@ public class PlayerPart : ObjectWithBorder {
                 if (IsInvisible) return false;
                 break;
             case EnemyType.Cloud:
-            case null: break;
+            case null: RemoveProtection(); break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(enemy), enemy, null);
         }
@@ -98,7 +98,8 @@ public class PlayerPart : ObjectWithBorder {
     private void RemoveProtection() {
         IsProtected = false;
         StartCoroutine(MakeInvincible(0.25f));
-        GetComponent<MeshRenderer>().material.SetTexture(texture, null);
+        var renderer = GetComponent<MeshRenderer>();
+        renderer.materials = new[] { renderer.materials[0] };
     }
 
     private void Betray() {

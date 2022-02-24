@@ -105,7 +105,11 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
             case 0: break;
             case 1: playerPartScript.IsSpeedUp = true; break;
             case 2: playerPartScript.IsSlowDown = true; break;
-            case 3: playerPartScript.IsProtected = true; break;
+            case 3: {
+                obj.GetComponent<MeshRenderer>().materials = new[] { materials[0], material };
+                playerPartScript.IsProtected = true;
+                break;
+            }
             case 4: playerPartScript.IsInvisible = true; break;
             case 5: playerPartScript.IsImposter = true; break;
             default: throw new ArgumentException("Unsupported property");
