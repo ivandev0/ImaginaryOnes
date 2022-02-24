@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 public static class Utils {
@@ -28,5 +29,9 @@ public static class Utils {
 
 		// Not reachable
 		return cumulativeProbs.Length - 1;
+	}
+
+	public static Vector4 GetRandomVector4() {
+		return new Vector4(Random.Range(0, 1), Random.Range(0, 1), Random.Range(0, 1), Random.Range(0, 1));
 	}
 }

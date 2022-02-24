@@ -650,12 +650,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - probabilities:
+    - 0.5
     - 0
     - 0
     - 0
     - 0
-    - 0
-    - 1
+    - 0.5
     partsCount: 2
     spawnWait: 1
     waveWait: 2
@@ -2504,8 +2504,8 @@ MonoBehaviour:
   playButton: {fileID: 1478280827}
   restartButton: {fileID: 1278267673}
   scoreText: {fileID: 1804299639}
-  deltaNextLevel: 5
-  offsetNextLevel: 5
+  deltaNextLevel: 30
+  offsetNextLevel: 10
   gameSpeed: 1
   gameLevel: 0
 --- !u!4 &1668137777

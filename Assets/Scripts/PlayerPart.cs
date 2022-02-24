@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using Enemies;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerPart : ObjectWithBorder {
     public float freeFallingSpeed = 5f;
     private GameObject player;
     private new Rigidbody rigidbody;
     private SphereCollider sphereCollider;
+    private MeshRenderer meshRenderer;
     private float radius;
     private float playerRadius;
 
@@ -20,7 +22,11 @@ public class PlayerPart : ObjectWithBorder {
     public bool IsInvisible { get; set; }
     public bool IsImposter { get; set; }
 
+    private Coroutine imposterCoroutine;
+
     private static readonly int texture = Shader.PropertyToID("Texture");
+    private static readonly int alpha = Shader.PropertyToID("_Alpha");
+    private static readonly int offset = Shader.PropertyToID("_Offset");
 
     new void Start() {
         base.Start();
@@ -29,8 +35,13 @@ public class PlayerPart : ObjectWithBorder {
         sphereCollider = GetComponent<SphereCollider>();
         radius = sphereCollider.radius;
         playerRadius = player.GetComponent<SphereCollider>().radius;
+        meshRenderer = GetComponent<MeshRenderer>();
 
         sphereCollider.radius *= 6;
+
+        if (IsImposter) {
+            imposterCoroutine = StartCoroutine(FlashNow());
+        }
     }
 
     void Update() {
@@ -47,6 +58,10 @@ public class PlayerPart : ObjectWithBorder {
                     rigidbody.velocity = Vector3.zero;
                 }
             }
+        }
+
+        if (IsImposter && !IsDestroyed) {
+            meshRenderer.materials[1].SetVector(offset, Utils.GetRandomVector4());
         }
     }
 
@@ -103,39 +118,68 @@ public class PlayerPart : ObjectWithBorder {
     }
 
     private void Betray() {
+        var imposterMaterial = meshRenderer.materials[1];
+        StopCoroutine(imposterCoroutine);
+
         var (first, second) = PlayerPartsController.Instance.GetTwoRandomParts();
         if (first == null && second == null) {
-            StartCoroutine(MoveAlong((transform.position - player.transform.position).normalized));
+            StartCoroutine(MoveAlong((transform.position - player.transform.position).normalized, imposterMaterial));
         } else if (first == null || second == null) {
             var obj = first == null ? second : first;
             var center = (obj.transform.position + transform.position) / 2;
-            StartCoroutine(obj.GetComponent<PlayerPart>().MoveAlong((obj.transform.position - center).normalized));
-            StartCoroutine(MoveAlong((transform.position - center).normalized));
+            StartCoroutine(obj.GetComponent<PlayerPart>().MoveAlong((obj.transform.position - center).normalized, imposterMaterial));
+            StartCoroutine(MoveAlong((transform.position - center).normalized, imposterMaterial));
         } else {
             var center = (first.transform.position + second.transform.position + transform.position) / 3;
-            StartCoroutine(first.GetComponent<PlayerPart>().MoveAlong((first.transform.position - center).normalized));
-            StartCoroutine(second.GetComponent<PlayerPart>().MoveAlong((second.transform.position - center).normalized));
-            StartCoroutine(MoveAlong((transform.position - center).normalized));
+            StartCoroutine(first.GetComponent<PlayerPart>().MoveAlong((first.transform.position - center).normalized, imposterMaterial));
+            StartCoroutine(second.GetComponent<PlayerPart>().MoveAlong((second.transform.position - center).normalized, imposterMaterial));
+            StartCoroutine(MoveAlong((transform.position - center).normalized, imposterMaterial));
         }
     }
 
-    // TODO change material
-    private IEnumerator MoveAlong(Vector3 vector) {
+    private IEnumerator MoveAlong(Vector3 vector, Material imposterMaterial) {
         IsAttached = false;
+        IsImposter = true;
+        meshRenderer.materials = new[] { meshRenderer.materials[0], imposterMaterial };
+        imposterMaterial = meshRenderer.materials[1];
         sphereCollider.enabled = false;
 
         var endValue = transform.position + vector * 10;
         var totalDistance = (transform.position - endValue).sqrMagnitude;
         var distance = totalDistance;
+        var time = 0.0f;
         while (distance > 1e-1 && !IsDestroyed) {
             float t = 1 - distance / totalDistance;
             t = t * t * (3f - 2f * t);
             rigidbody.velocity = vector * (10 * t + 1);
+
+            imposterMaterial.SetFloat(alpha, time);
+            time += Time.deltaTime;
 
             distance = (transform.position - endValue).sqrMagnitude;
             yield return null;
         }
 
         Destroy(gameObject);
+    }
+
+    private IEnumerator FlashNow () {
+        float totalSeconds = 0.25f;
+        float maxIntensity = 1f;
+        var material = meshRenderer.materials[1];
+
+        while (!IsDestroyed) {
+            float waitTime = totalSeconds / 2;
+            while (material.GetFloat(alpha) < maxIntensity) {
+                material.SetFloat(alpha, material.GetFloat(alpha) + Time.deltaTime / waitTime);
+                yield return null;
+            }
+
+            while (material.GetFloat(alpha) > 0) {
+                material.SetFloat(alpha, material.GetFloat(alpha) - Time.deltaTime / waitTime);
+                yield return null;
+            }
+            yield return new WaitForSeconds(Random.Range(0.75f, 1.5f));
+        }
     }
 }
