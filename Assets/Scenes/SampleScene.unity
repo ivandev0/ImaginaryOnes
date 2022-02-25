@@ -2607,7 +2607,7 @@ MonoBehaviour:
   offsetNextLevel: 10
   gameSpeed: 1
   gameLevel: 0
-  partsNumber: 0
+  currentMaterialsIndex: 0
 --- !u!4 &1668137777
 Transform:
   m_ObjectHideFlags: 0
@@ -7998,6 +7998,7 @@ GameObject:
   - component: {fileID: 2118348436}
   - component: {fileID: 2118348435}
   - component: {fileID: 2118348434}
+  - component: {fileID: 2118348433}
   m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
@@ -8005,6 +8006,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2118348433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118348432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 347e56c6a0720bd4e9db319293a0bb4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  materials:
+  - {fileID: 2100000, guid: 945b1506e9a1433f91c733937fd52dcb, type: 2}
+  - {fileID: 2100000, guid: d239d646c5b94d3cb04c4e79a9d388db, type: 2}
+  - {fileID: 2100000, guid: f2a24b75b7f94895b0cb767253460faa, type: 2}
+  - {fileID: 2100000, guid: 535f7e6b76c44fbf8da1ab529f43c7d6, type: 2}
+  - {fileID: 2100000, guid: ca25a4b1b08545d78b70a51a7f19bab2, type: 2}
 --- !u!23 &2118348434
 MeshRenderer:
   m_ObjectHideFlags: 0

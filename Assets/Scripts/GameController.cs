@@ -14,11 +14,11 @@ public class GameController : Singleton<GameController> {
     private float localGameSpeed = 1.0f;
     public float gameSpeed = 1.0f;
     public int gameLevel = 0;
-    public int partsNumber = 0;
+    public int currentMaterialsIndex = 0;
     private const int maxLocalGameSpeed = 2;
     public const int maxGameLevel = 7;
 
-    private bool isBegin = true, isPlay, isPause, isEnd;
+    private bool hasStarted, isBegin = true, isPlay, isEnd;
     private float score;
     private Coroutine enemySpawnRoutine;
     private Coroutine partsSpawnRoutine;
@@ -52,7 +52,10 @@ public class GameController : Singleton<GameController> {
         restartButton.SetActive(false);
         score = gameLevel = 0;
         gameSpeed = localGameSpeed = 1;
-        partsNumber = Random.Range(0, PlayerPartsController.Instance.commonMaterials.Length);
+        if (hasStarted) {
+            currentMaterialsIndex = Random.Range(0, PlayerPartsController.Instance.commonMaterials.Length);
+            StartCoroutine(Background.Instance.ChangeColor(1.0f));
+        }
         PlayerPartsController.Instance.UpdateMaterials();
         player.GetComponent<PlayerController>().SetMaterial(PlayerPartsController.Instance.GetFirstMaterial());
         SetScore();
@@ -62,6 +65,7 @@ public class GameController : Singleton<GameController> {
         }
 
         isBegin = true;
+        hasStarted = true;
         player.GetComponent<PlayerController>().MoveToTheScreenCenter(() => {
             isBegin = false;
             isPlay = true;

@@ -55,7 +55,7 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
     }
 
     public void UpdateMaterials() {
-        currentMaterials = commonMaterials[GameController.Instance.partsNumber].materials;
+        currentMaterials = commonMaterials[GameController.Instance.currentMaterialsIndex].materials;
     }
 
     public Material GetFirstMaterial() {
