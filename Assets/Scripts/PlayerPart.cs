@@ -25,7 +25,6 @@ public class PlayerPart : ObjectWithBorder {
 
     private Coroutine imposterCoroutine;
 
-    private static readonly int texture = Shader.PropertyToID("Texture");
     private static readonly int alpha = Shader.PropertyToID("_Alpha");
     private static readonly int offset = Shader.PropertyToID("_Offset");
 

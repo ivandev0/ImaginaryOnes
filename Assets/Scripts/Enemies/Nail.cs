@@ -22,7 +22,9 @@ namespace Enemies {
             if (other.gameObject.CompareTag("Player")) {
                 GameController.Instance.GameOver();
             } else if (other.gameObject.CompareTag("PlayerPart")) {
-                var wasTouched = other.gameObject.GetComponent<PlayerPart>().BlowUp(EnemyType.Nail, () => { Destroy(other.gameObject); });
+                var wasTouched = other.gameObject.GetComponent<PlayerPart>().BlowUp(EnemyType.Nail, () => {
+                    if (other.gameObject != null) Destroy(other.gameObject);
+                });
 
                 if (wasTouched) {
                     IsDestroyed = true;

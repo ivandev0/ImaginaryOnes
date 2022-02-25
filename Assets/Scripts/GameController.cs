@@ -16,7 +16,7 @@ public class GameController : Singleton<GameController> {
     public int gameLevel = 0;
     public int currentMaterialsIndex = 0;
     private const int maxLocalGameSpeed = 2;
-    public const int maxGameLevel = 7;
+    public const int maxGameLevel = 6;
 
     private bool hasStarted, isBegin = true, isPlay, isEnd;
     private float score;
@@ -34,9 +34,9 @@ public class GameController : Singleton<GameController> {
     }
 
     void Update() {
-        var speedUp = PlayerPartsController.Instance.GetSpeedUpCount() * 0.05f;
-        var slowDown = PlayerPartsController.Instance.GetSlowDownCount() * 0.05f;
-        gameSpeed = Mathf.Clamp(localGameSpeed + speedUp - slowDown, 0.5f, float.MaxValue);
+        var speedUp = PlayerPartsController.Instance.GetSpeedUpCount() * 0.25f;
+        var slowDown = PlayerPartsController.Instance.GetSlowDownCount() * 0.25f;
+        gameSpeed = Mathf.Clamp(localGameSpeed + speedUp - slowDown, 0.25f, 4);
     }
 
     public bool GameIsOn() {
@@ -120,7 +120,7 @@ public class GameController : Singleton<GameController> {
 
     private IEnumerator IncreaseGameSpeed() {
         while (GameIsOn() && localGameSpeed < maxLocalGameSpeed) {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(5f);
             localGameSpeed += 0.1f;
         }
     }

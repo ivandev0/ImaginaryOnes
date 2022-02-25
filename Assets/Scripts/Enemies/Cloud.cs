@@ -25,7 +25,9 @@ namespace Enemies {
             if (other.gameObject.CompareTag("Player")) {
                 GameController.Instance.GameOver();
             } else if (other.gameObject.CompareTag("PlayerPart")) {
-                other.gameObject.GetComponent<PlayerPart>().BlowUp(EnemyType.Cloud, () => { Destroy(other.gameObject); });
+                other.gameObject.GetComponent<PlayerPart>().BlowUp(EnemyType.Cloud, () => {
+                    if (other.gameObject != null) Destroy(other.gameObject);
+                });
             }
         }
     }

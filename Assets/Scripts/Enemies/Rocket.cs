@@ -52,7 +52,7 @@ namespace Enemies {
                 foreach (var col in partsToExplode) {
                     col.gameObject.GetComponent<PlayerPart>().BlowUp(EnemyType.Rocket, () => {
                         foreach (var col in partsToExplode) {
-                            Destroy(col.gameObject);
+                            if (col != null) Destroy(col.gameObject);
                         }
                     });
                 }

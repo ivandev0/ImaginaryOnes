@@ -50,7 +50,11 @@ public class EnemyController : Singleton<EnemyController> {
                 for (int j = 0; j < wave.enemies.Length; j++) {
                     var enemy = wave.enemies[j];
                     if (wave.evenlyDistributed) {
-                        // TODO
+                        var singleBucketWidth = spawnValues.x * 2 / wave.enemies.Length;
+                        var spawnPosition = -spawnValues.x + singleBucketWidth / 2.0f + j * singleBucketWidth;
+                        var singleBucket = new Vector3(spawnPosition, spawnValues.y, spawnValues.z);
+                        var spawnRotation = wave.enemies[j].transform.rotation;
+                        Instantiate(enemy, singleBucket, spawnRotation);
                     } else {
                         if (wave.positions.Length == wave.enemies.Length) {
                             var spawnPosition = new Vector3(wave.positions[j].x, spawnValues.y, spawnValues.z);
@@ -63,7 +67,7 @@ public class EnemyController : Singleton<EnemyController> {
                         }
                     }
 
-                    if (wave.spawnRate != 0) {
+                    if (wave.spawnRate != 0 && !wave.evenlyDistributed) {
                         yield return new WaitForSeconds(wave.spawnRate);
                     }
                 }
