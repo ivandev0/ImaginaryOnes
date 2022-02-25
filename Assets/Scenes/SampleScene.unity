@@ -653,8 +653,8 @@ MonoBehaviour:
     - 0.5
     - 0
     - 0
-    - 0
     - 0.5
+    - 0
     - 0
     partsCount: 2
     spawnWait: 1
@@ -756,7 +756,7 @@ MonoBehaviour:
   speedUpMat: {fileID: 2100000, guid: 2f13750ce0a2f0041a90f8d7d1b6eeab, type: 2}
   slowDownMat: {fileID: 2100000, guid: 4537578a41ab4b047a1dcf7e9507ef39, type: 2}
   protectedMat: {fileID: 2100000, guid: 3b50743eb601bed4bb30544032d9c513, type: 2}
-  invisibleMat: {fileID: 2100000, guid: d0f93a2cd96b486fbfa21850f955ecd0, type: 2}
+  invisibleMat: {fileID: 2100000, guid: 23d5ca0fc13e1514290837e78790298a, type: 2}
   imposterMat: {fileID: 2100000, guid: 987bf901d5a9b724391be35efaf43623, type: 2}
 --- !u!4 &431613327
 Transform:
@@ -2338,7 +2338,7 @@ PrefabInstance:
     - target: {fileID: 439513192472124123, guid: f588fb882bbf2c5459e89fca4555e061, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: d0f93a2cd96b486fbfa21850f955ecd0, type: 2}
+      objectReference: {fileID: 2100000, guid: 23d5ca0fc13e1514290837e78790298a, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f588fb882bbf2c5459e89fca4555e061, type: 3}
 --- !u!4 &1440702581 stripped
