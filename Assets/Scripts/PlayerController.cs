@@ -55,6 +55,8 @@ public class PlayerController : ObjectWithBorder {
     }
 
     public void BlowUp(Action atTheEnd) {
+        GetComponent<AudioSource>().Play();
+
         StartCoroutine(Explosive.BlowUp(gameObject, () => {
             transform.position = initPosition;
             transform.localScale = initScale;

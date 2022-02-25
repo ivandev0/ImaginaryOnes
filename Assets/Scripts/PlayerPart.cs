@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 public class PlayerPart : ObjectWithBorder {
     public float freeFallingSpeed = 5f;
+
     private GameObject player;
     private new Rigidbody rigidbody;
     private SphereCollider sphereCollider;
@@ -87,6 +88,7 @@ public class PlayerPart : ObjectWithBorder {
                 throw new ArgumentOutOfRangeException(nameof(enemy), enemy, null);
         }
         IsDestroyed = true;
+        GetComponent<AudioSource>().Play();
         StartCoroutine(Explosive.BlowUp(gameObject, atTheEnd));
         return true;
     }
