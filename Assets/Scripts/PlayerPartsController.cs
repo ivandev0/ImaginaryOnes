@@ -12,11 +12,16 @@ public class LevelStats {
     public float waveWait;
 }
 
+[Serializable]
+public class Materials {
+    public Material[] materials;
+}
+
 public class PlayerPartsController : Singleton<PlayerPartsController> {
     public LevelStats[] stats;
     public GameObject playerPart;
 
-    public Material commonMat;
+    public Materials[] commonMaterials;
     public Material speedUpMat;
     public Material slowDownMat;
     public Material protectedMat;
@@ -24,21 +29,22 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
     public Material imposterMat;
 
     private Vector3 spawnValues;
-    private Material[] materials;
+    private Material[] buffedMaterials;
+    private Material[] currentMaterials;
 
     void Start() {
         var verticalExtent = Camera.main.orthographicSize;
         var horizontalExtent = verticalExtent * Screen.width / Screen.height;
         spawnValues = new Vector3(horizontalExtent * 0.95f, verticalExtent * 1.5f, 0);
 
-        materials = new[] { commonMat, speedUpMat, slowDownMat, protectedMat, invisibleMat, imposterMat };
-
         if (stats.Length != GameController.maxGameLevel + 1) {
             throw new ArgumentException("Level stats length must be equal to (maxGameLevel + 1)");
         }
 
+        buffedMaterials = new[] { speedUpMat, slowDownMat, protectedMat, invisibleMat, imposterMat };
+
         foreach (var stat in stats) {
-            if (stat.probabilities.Length != materials.Length) {
+            if (stat.probabilities.Length != buffedMaterials.Length + 1) {
                 throw new ArgumentException("Probabilities length must be equal to materials count");
             }
 
@@ -48,8 +54,12 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
         }
     }
 
-    void Update() {
-        
+    public void UpdateMaterials() {
+        currentMaterials = commonMaterials[GameController.Instance.partsNumber].materials;
+    }
+
+    public Material GetFirstMaterial() {
+        return currentMaterials[0];
     }
 
     public IEnumerator SpawnWaves() {
@@ -97,22 +107,29 @@ public class PlayerPartsController : Singleton<PlayerPartsController> {
     private GameObject GetNextPart(LevelStats stat, Vector3 position) {
         var index = Utils.GetRandomIndexWithGivenProbabilities(stat.probabilities);
         var obj = Instantiate(playerPart, position, Quaternion.identity, transform);
-        var material = materials[index];
-        obj.GetComponent<MeshRenderer>().material = material;
+        var randomCommonMaterial = currentMaterials[Random.Range(0, currentMaterials.Length)];
+
+        if (index == 0) {
+            obj.GetComponent<MeshRenderer>().material = randomCommonMaterial;
+            return obj;
+        }
+
+        var bufferMaterial = buffedMaterials[index - 1];
+        obj.GetComponent<MeshRenderer>().material = bufferMaterial;
 
         var playerPartScript = obj.GetComponent<PlayerPart>();
         switch (index) {
-            case 0: break;
+            // case 0: break;
             case 1: playerPartScript.IsSpeedUp = true; break;
             case 2: playerPartScript.IsSlowDown = true; break;
             case 3: {
-                obj.GetComponent<MeshRenderer>().materials = new[] { materials[0], material };
+                obj.GetComponent<MeshRenderer>().materials = new[] { randomCommonMaterial, bufferMaterial };
                 playerPartScript.IsProtected = true;
                 break;
             }
             case 4: playerPartScript.IsInvisible = true; break;
             case 5: {
-                obj.GetComponent<MeshRenderer>().materials = new[] { materials[0], material };
+                obj.GetComponent<MeshRenderer>().materials = new[] { randomCommonMaterial, bufferMaterial };
                 playerPartScript.IsImposter = true;
                 break;
             }

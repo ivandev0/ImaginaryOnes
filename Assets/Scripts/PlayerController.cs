@@ -61,4 +61,8 @@ public class PlayerController : ObjectWithBorder {
             atTheEnd();
         }));
     }
+
+    public void SetMaterial(Material material) {
+        GetComponent<MeshRenderer>().material = material;
+    }
 }

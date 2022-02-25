@@ -37,6 +37,7 @@ public class PlayerPart : ObjectWithBorder {
         playerRadius = player.GetComponent<SphereCollider>().radius;
         meshRenderer = GetComponent<MeshRenderer>();
 
+        transform.rotation = Random.rotation;
         sphereCollider.radius *= 6;
 
         if (IsImposter) {
@@ -46,7 +47,7 @@ public class PlayerPart : ObjectWithBorder {
 
     void Update() {
         if (!IsAttached) {
-            rigidbody.velocity = -transform.up * freeFallingSpeed;
+            rigidbody.velocity = Vector3.down * freeFallingSpeed;
         } else {
             var clampedPosition = Clamp(transform.position, radius / 2);
             if (clampedPosition != transform.position) {

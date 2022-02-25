@@ -14,6 +14,7 @@ public class GameController : Singleton<GameController> {
     private float localGameSpeed = 1.0f;
     public float gameSpeed = 1.0f;
     public int gameLevel = 0;
+    public int partsNumber = 0;
     private const int maxLocalGameSpeed = 2;
     public const int maxGameLevel = 7;
 
@@ -51,6 +52,9 @@ public class GameController : Singleton<GameController> {
         restartButton.SetActive(false);
         score = gameLevel = 0;
         gameSpeed = localGameSpeed = 1;
+        partsNumber = Random.Range(0, PlayerPartsController.Instance.commonMaterials.Length);
+        PlayerPartsController.Instance.UpdateMaterials();
+        player.GetComponent<PlayerController>().SetMaterial(PlayerPartsController.Instance.GetFirstMaterial());
         SetScore();
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy")) {
@@ -61,6 +65,7 @@ public class GameController : Singleton<GameController> {
         player.GetComponent<PlayerController>().MoveToTheScreenCenter(() => {
             isBegin = false;
             isPlay = true;
+            player.GetComponent<SphereCollider>().isTrigger = false;
             enemySpawnRoutine = StartCoroutine(EnemyController.Instance.SpawnWaves());
             partsSpawnRoutine = StartCoroutine(PlayerPartsController.Instance.SpawnWaves());
             scoreRoutine = StartCoroutine(CountScore());
