@@ -87,7 +87,7 @@ public class PlayerPart : ObjectWithBorder {
                 throw new ArgumentOutOfRangeException(nameof(enemy), enemy, null);
         }
         IsDestroyed = true;
-        GetComponent<AudioSource>().Play();
+        if (enemy != null) GetComponent<AudioSource>().Play();
         StartCoroutine(Explosive.BlowUp(gameObject, atTheEnd));
         return true;
     }
