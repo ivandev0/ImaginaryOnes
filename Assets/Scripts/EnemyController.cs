@@ -68,15 +68,19 @@ public class EnemyController : Singleton<EnemyController> {
                     }
 
                     if (wave.spawnRate != 0 && !wave.evenlyDistributed) {
-                        yield return new WaitForSeconds(wave.spawnRate);
+                        yield return new WaitForSeconds(ClampTime(wave.spawnRate));
                     }
                 }
 
                 if (i != pattern.waves.Length - 1) {
-                    yield return new WaitForSeconds(pattern.waveDelay);
+                    yield return new WaitForSeconds(ClampTime(pattern.waveDelay));
                 }
             }
-            yield return new WaitForSeconds(enemiesForThisLevel.spawnDelay);
+            yield return new WaitForSeconds(ClampTime(enemiesForThisLevel.spawnDelay));
         }
+    }
+
+    private float ClampTime(float time) {
+        return time / GameController.Instance.gameSpeed;
     }
 }
