@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
-public class Waves {
+public struct Waves {
     public GameObject[] enemies;
     public Vector3[] positions;
     public bool evenlyDistributed;
@@ -12,22 +12,451 @@ public class Waves {
 }
 
 [System.Serializable]
-public class Patterns {
+public struct Patterns {
     public Waves[] waves;
     public float waveDelay;
 }
 
 [System.Serializable]
-public class EnemiesByLevel {
+public struct EnemiesByLevel {
     public Patterns[] enemies;
     public float[] probabilities;
     public float spawnDelay;
 }
 
 public class EnemyController : Singleton<EnemyController> {
-    public EnemiesByLevel[] enemiesByLevels;
+    public GameObject nail, rocket, boomerangLarge, boomerangSmall, cloud;
+
+    private EnemiesByLevel[] enemiesByLevels;
+    private float afterBoomerangDelay = 1.5f;
 
     private Vector3 spawnValues;
+
+    private void Awake() {
+        enemiesByLevels = new[]
+        {
+            new EnemiesByLevel()
+            {
+                enemies = new[]
+                {
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { nail },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0
+                    }
+                },
+                probabilities = new []{1.0f},
+                spawnDelay = 1.5f
+            },
+            new EnemiesByLevel()
+            {
+                enemies = new[]
+                {
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { nail },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { rocket },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0
+                    }
+                },
+                probabilities = new []{0.7f, 0.3f},
+                spawnDelay = 1.25f
+            },
+            new EnemiesByLevel()
+            {
+                enemies = new[]
+                {
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { nail, nail },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { rocket },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { boomerangLarge },
+                                positions = new []{ Vector3.zero },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = afterBoomerangDelay
+                    }
+                },
+                probabilities = new []{0.5f, 0.3f, 0.2f},
+                spawnDelay = 1.25f
+            },
+            new EnemiesByLevel()
+            {
+                enemies = new[]
+                {
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { nail, nail, nail },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 1
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { rocket },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { boomerangLarge },
+                                positions = new []{ Vector3.zero },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = afterBoomerangDelay
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { cloud },
+                                positions = new []{ Vector3.zero },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0.5f
+                    },
+                },
+                probabilities = new []{0.3f, 0.3f, 0.3f, 0.1f},
+                spawnDelay = 1.25f
+            },
+            new EnemiesByLevel()
+            {
+                enemies = new[]
+                {
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { nail, nail, nail, nail },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = true,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 1
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { rocket },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { boomerangLarge },
+                                positions = new []{ Vector3.zero },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = afterBoomerangDelay
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { boomerangSmall },
+                                positions = new []{ new Vector3(2.67f, 0, 0) },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = afterBoomerangDelay
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { boomerangSmall },
+                                positions = new []{ new Vector3(-2.67f, 0, 0) },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = afterBoomerangDelay
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { cloud },
+                                positions = new []{ Vector3.zero },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0.5f
+                    },
+                },
+                probabilities = new []{0.3f, 0.2f, 0.1f, 0.1f, 0.1f, 0.2f},
+                spawnDelay = 1.25f
+            },
+            new EnemiesByLevel()
+            {
+                enemies = new[]
+                {
+                    new Patterns()
+                    {
+                        waves = new []
+                        {
+                            new Waves()
+                            {
+                                enemies = new []{nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0.2f
+                            }
+                        },
+                        waveDelay = 0.5f
+                    },
+                    new Patterns()
+                    {
+                        waves = new []
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { boomerangSmall },
+                                positions = new []{ new Vector3(2.67f, 0, 0) },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = afterBoomerangDelay
+                    },
+                    new Patterns()
+                    {
+                        waves = new []
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { boomerangSmall },
+                                positions = new []{ new Vector3(-2.67f, 0, 0) },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = afterBoomerangDelay
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { cloud },
+                                positions = new []{ Vector3.zero },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0.5f
+                    },
+                },
+                probabilities = new []{0.1f, 0.3f, 0.3f, 0.3f},
+                spawnDelay = 1.25f
+            },
+            new EnemiesByLevel()
+            {
+                enemies = new[]
+                {
+                    new Patterns()
+                    {
+                        waves = new []
+                        {
+                            new Waves()
+                            {
+                                enemies = new []{nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0.2f
+                            }
+                        },
+                        waveDelay = 0.5f
+                    },
+                    new Patterns()
+                    {
+                        waves = new []
+                        {
+                            new Waves()
+                            {
+                                enemies = new []{nail, nail, nail, nail },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = true,
+                                spawnRate = 0
+                            },
+                            new Waves()
+                            {
+                                enemies = new []{nail, nail, nail, nail },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = true,
+                                spawnRate = 0
+                            },
+                            new Waves()
+                            {
+                                enemies = new []{nail, nail, nail, nail },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = true,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0.5f
+                    },
+                    new Patterns()
+                    {
+                        waves = new []
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { rocket, rocket },
+                                positions = Array.Empty<Vector3>(),
+                                evenlyDistributed = false,
+                                spawnRate = 0.25f
+                            }
+                        },
+                        waveDelay = 0
+                    },
+                    new Patterns()
+                    {
+                        waves = new []
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { boomerangLarge },
+                                positions = new []{ Vector3.zero },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = afterBoomerangDelay
+                    },
+                    new Patterns()
+                    {
+                        waves = new[]
+                        {
+                            new Waves()
+                            {
+                                enemies = new[] { cloud },
+                                positions = new []{ Vector3.zero },
+                                evenlyDistributed = false,
+                                spawnRate = 0
+                            }
+                        },
+                        waveDelay = 0.5f
+                    },
+                },
+                probabilities = new []{0.1f, 0.1f, 0.2f, 0.1f, 0.3f},
+                spawnDelay = 1.25f
+            }
+        };
+    }
 
     void Start() {
         var verticalExtent = Camera.main.orthographicSize;
