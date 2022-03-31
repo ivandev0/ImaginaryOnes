@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Enemies {
-    public class Cloud : MonoBehaviour {
+    public class Cloud : MonoBehaviour, Enemy {
         public float speedY;
         public float speedX;
         public float movementRadiusX;
@@ -19,6 +19,10 @@ namespace Enemies {
             transform.position = new Vector3(x, y, 0);
             angle += speedX * Time.deltaTime;
             angle %= 360;
+        }
+
+        public void Randomize() {
+            //
         }
 
         private void OnTriggerEnter(Collider other) {

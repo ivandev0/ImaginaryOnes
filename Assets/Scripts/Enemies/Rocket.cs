@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace Enemies {
-    public class Rocket : MonoBehaviour {
+    public class Rocket : MonoBehaviour, Enemy {
         public float speed;
         public float blowRadius;
 
@@ -37,6 +37,10 @@ namespace Enemies {
 
             yield return new WaitForSeconds(1.0f);
             ready = true;
+        }
+
+        public void Randomize() {
+            //
         }
 
         private void OnTriggerEnter(Collider other) {

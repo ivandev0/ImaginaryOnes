@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
+using System.Linq;
+using Enemies;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
 public struct Waves {
     public GameObject[] enemies;
-    public Vector3[] positions;
+    public float[] positions;
     public bool evenlyDistributed;
     public float spawnRate;
 }
@@ -32,28 +34,31 @@ public class EnemyController : Singleton<EnemyController> {
 
     private Vector3 spawnValues;
 
+    private Patterns SingleWavePattern(
+        GameObject model, int count, float[] xPositions = null, float spawnRate = 0, float waveDelay = 0
+    ) {
+        return new Patterns()
+        {
+            waves = new[]
+            {
+                new Waves()
+                {
+                    enemies = Enumerable.Repeat(model, count).ToArray(),
+                    positions = xPositions ?? Array.Empty<float>(),
+                    evenlyDistributed = false,
+                    spawnRate = spawnRate
+                }
+            },
+            waveDelay = waveDelay
+        };
+    }
+
     private void Awake() {
         enemiesByLevels = new[]
         {
             new EnemiesByLevel()
             {
-                enemies = new[]
-                {
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { nail },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0
-                    }
-                },
+                enemies = new[] { SingleWavePattern(nail, 1) },
                 probabilities = new []{1.0f},
                 spawnDelay = 1.5f
             },
@@ -61,34 +66,8 @@ public class EnemyController : Singleton<EnemyController> {
             {
                 enemies = new[]
                 {
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { nail },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { rocket },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0
-                    }
+                    SingleWavePattern(nail, 1),
+                    SingleWavePattern(rocket, 1),
                 },
                 probabilities = new []{0.7f, 0.3f},
                 spawnDelay = 1.25f
@@ -97,48 +76,9 @@ public class EnemyController : Singleton<EnemyController> {
             {
                 enemies = new[]
                 {
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { nail, nail },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { rocket },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { boomerangLarge },
-                                positions = new []{ Vector3.zero },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = afterBoomerangDelay
-                    }
+                    SingleWavePattern(nail, 2),
+                    SingleWavePattern(rocket, 1),
+                    SingleWavePattern(boomerangLarge, 1, new []{ 0.0f }, waveDelay: afterBoomerangDelay)
                 },
                 probabilities = new []{0.5f, 0.3f, 0.2f},
                 spawnDelay = 1.25f
@@ -147,62 +87,10 @@ public class EnemyController : Singleton<EnemyController> {
             {
                 enemies = new[]
                 {
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { nail, nail, nail },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 1
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { rocket },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { boomerangLarge },
-                                positions = new []{ Vector3.zero },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = afterBoomerangDelay
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { cloud },
-                                positions = new []{ Vector3.zero },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0.5f
-                    },
+                    SingleWavePattern(nail, 3, waveDelay: 1),
+                    SingleWavePattern(rocket, 1),
+                    SingleWavePattern(boomerangLarge, 1, new []{ 0.0f }, waveDelay: afterBoomerangDelay),
+                    SingleWavePattern(cloud, 1, new []{ 0.0f }, waveDelay: 0.5f),
                 },
                 probabilities = new []{0.3f, 0.3f, 0.3f, 0.1f},
                 spawnDelay = 1.25f
@@ -211,90 +99,12 @@ public class EnemyController : Singleton<EnemyController> {
             {
                 enemies = new[]
                 {
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { nail, nail, nail, nail },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = true,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 1
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { rocket },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { boomerangLarge },
-                                positions = new []{ Vector3.zero },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = afterBoomerangDelay
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { boomerangSmall },
-                                positions = new []{ new Vector3(2.67f, 0, 0) },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = afterBoomerangDelay
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { boomerangSmall },
-                                positions = new []{ new Vector3(-2.67f, 0, 0) },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = afterBoomerangDelay
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { cloud },
-                                positions = new []{ Vector3.zero },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0.5f
-                    },
+                    SingleWavePattern(nail, 4, waveDelay: 1),
+                    SingleWavePattern(rocket, 1),
+                    SingleWavePattern(boomerangLarge, 1, new []{ 0.0f }, waveDelay: afterBoomerangDelay),
+                    SingleWavePattern(boomerangSmall, 1, new []{ 2.67f }, waveDelay: afterBoomerangDelay),
+                    SingleWavePattern(boomerangSmall, 1, new []{ -2.67f }, waveDelay: afterBoomerangDelay),
+                    SingleWavePattern(cloud, 1, new []{ 0.0f }, waveDelay: 0.5f),
                 },
                 probabilities = new []{0.3f, 0.2f, 0.1f, 0.1f, 0.1f, 0.2f},
                 spawnDelay = 1.25f
@@ -303,62 +113,10 @@ public class EnemyController : Singleton<EnemyController> {
             {
                 enemies = new[]
                 {
-                    new Patterns()
-                    {
-                        waves = new []
-                        {
-                            new Waves()
-                            {
-                                enemies = new []{nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0.2f
-                            }
-                        },
-                        waveDelay = 0.5f
-                    },
-                    new Patterns()
-                    {
-                        waves = new []
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { boomerangSmall },
-                                positions = new []{ new Vector3(2.67f, 0, 0) },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = afterBoomerangDelay
-                    },
-                    new Patterns()
-                    {
-                        waves = new []
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { boomerangSmall },
-                                positions = new []{ new Vector3(-2.67f, 0, 0) },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = afterBoomerangDelay
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { cloud },
-                                positions = new []{ Vector3.zero },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0.5f
-                    },
+                    SingleWavePattern(nail, 15, spawnRate: 0.2f, waveDelay: 0.5f),
+                    SingleWavePattern(boomerangSmall, 1, new []{ 2.67f }, waveDelay: afterBoomerangDelay),
+                    SingleWavePattern(boomerangSmall, 1, new []{ -2.67f }, waveDelay: afterBoomerangDelay),
+                    SingleWavePattern(cloud, 1, new []{ 0.0f }, waveDelay: 0.5f),
                 },
                 probabilities = new []{0.1f, 0.3f, 0.3f, 0.3f},
                 spawnDelay = 1.25f
@@ -367,20 +125,7 @@ public class EnemyController : Singleton<EnemyController> {
             {
                 enemies = new[]
                 {
-                    new Patterns()
-                    {
-                        waves = new []
-                        {
-                            new Waves()
-                            {
-                                enemies = new []{nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail, nail },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0.2f
-                            }
-                        },
-                        waveDelay = 0.5f
-                    },
+                    SingleWavePattern(nail, 15, spawnRate: 0.2f, waveDelay: 0.5f),
                     new Patterns()
                     {
                         waves = new []
@@ -388,69 +133,30 @@ public class EnemyController : Singleton<EnemyController> {
                             new Waves()
                             {
                                 enemies = new []{nail, nail, nail, nail },
-                                positions = Array.Empty<Vector3>(),
+                                positions = Array.Empty<float>(),
                                 evenlyDistributed = true,
                                 spawnRate = 0
                             },
                             new Waves()
                             {
                                 enemies = new []{nail, nail, nail, nail },
-                                positions = Array.Empty<Vector3>(),
+                                positions = Array.Empty<float>(),
                                 evenlyDistributed = true,
                                 spawnRate = 0
                             },
                             new Waves()
                             {
                                 enemies = new []{nail, nail, nail, nail },
-                                positions = Array.Empty<Vector3>(),
+                                positions = Array.Empty<float>(),
                                 evenlyDistributed = true,
                                 spawnRate = 0
                             }
                         },
                         waveDelay = 0.5f
                     },
-                    new Patterns()
-                    {
-                        waves = new []
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { rocket, rocket },
-                                positions = Array.Empty<Vector3>(),
-                                evenlyDistributed = false,
-                                spawnRate = 0.25f
-                            }
-                        },
-                        waveDelay = 0
-                    },
-                    new Patterns()
-                    {
-                        waves = new []
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { boomerangLarge },
-                                positions = new []{ Vector3.zero },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = afterBoomerangDelay
-                    },
-                    new Patterns()
-                    {
-                        waves = new[]
-                        {
-                            new Waves()
-                            {
-                                enemies = new[] { cloud },
-                                positions = new []{ Vector3.zero },
-                                evenlyDistributed = false,
-                                spawnRate = 0
-                            }
-                        },
-                        waveDelay = 0.5f
-                    },
+                    SingleWavePattern(rocket, 2, spawnRate: 0.25f),
+                    SingleWavePattern(boomerangLarge, 1, new []{ 0.0f }, waveDelay: afterBoomerangDelay),
+                    SingleWavePattern(cloud, 1, new []{ 0.0f }, waveDelay: 0.5f),
                 },
                 probabilities = new []{0.1f, 0.1f, 0.2f, 0.1f, 0.3f},
                 spawnDelay = 1.25f
@@ -476,26 +182,30 @@ public class EnemyController : Singleton<EnemyController> {
 
             for (var i = 0; i < pattern.waves.Length; i++) {
                 var wave = pattern.waves[i];
+                var randomY = Random.Range(0, Camera.main.orthographicSize * 0.25f);
                 for (int j = 0; j < wave.enemies.Length; j++) {
                     var enemy = wave.enemies[j];
+                    var spawnY = spawnValues.y + randomY;
+                    GameObject newEnemyObject;
                     if (wave.evenlyDistributed) {
                         var singleBucketWidth = spawnValues.x * 2 / wave.enemies.Length;
                         var spawnPosition = -spawnValues.x + singleBucketWidth / 2.0f + j * singleBucketWidth;
-                        var singleBucket = new Vector3(spawnPosition, spawnValues.y, spawnValues.z);
+                        var singleBucket = new Vector3(spawnPosition, spawnY, spawnValues.z);
                         var spawnRotation = wave.enemies[j].transform.rotation;
-                        Instantiate(enemy, singleBucket, spawnRotation);
+                        newEnemyObject = Instantiate(enemy, singleBucket, spawnRotation);
                     } else {
                         if (wave.positions.Length == wave.enemies.Length) {
-                            var spawnPosition = new Vector3(wave.positions[j].x, spawnValues.y, spawnValues.z);
+                            var spawnPosition = new Vector3(wave.positions[j], spawnY, spawnValues.z);
                             var spawnRotation = wave.enemies[j].transform.rotation;
-                            Instantiate(enemy, spawnPosition, spawnRotation);
+                            newEnemyObject = Instantiate(enemy, spawnPosition, spawnRotation);
                         } else {
-                            var spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+                            var spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnY, spawnValues.z);
                             var spawnRotation = wave.enemies[j].transform.rotation;
-                            Instantiate(enemy, spawnPosition, spawnRotation);
+                            newEnemyObject = Instantiate(enemy, spawnPosition, spawnRotation);
                         }
                     }
 
+                    newEnemyObject.GetComponent<Enemy>().Randomize();
                     if (wave.spawnRate != 0 && !wave.evenlyDistributed) {
                         yield return new WaitForSeconds(ClampTime(wave.spawnRate));
                     }

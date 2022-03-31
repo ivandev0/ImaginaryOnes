@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Enemies {
-    public class Nail : MonoBehaviour {
+    public class Nail : MonoBehaviour, Enemy {
         public int health;
         public float speed;
 
@@ -14,6 +14,10 @@ namespace Enemies {
 
         void Update() {
             rigidbody.velocity = Vector3.down * speed * GameController.Instance.gameSpeed;
+        }
+
+        public void Randomize() {
+            //
         }
 
         private void OnTriggerEnter(Collider other) {
