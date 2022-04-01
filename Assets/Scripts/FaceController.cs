@@ -16,7 +16,17 @@ public class FaceController: MonoBehaviour {
 			transform.position = initPosition;
 			return;
 		}
-		rigidbody.velocity = (player.transform.position - transform.position) * GetVelocityMultiplier();
+
+		var playerPosition = player.transform.position;
+		var position = transform.position;
+		if ((playerPosition - position).magnitude > 0.75f) {
+			var normal = (position - playerPosition).normalized;
+			var newPosition = playerPosition + normal * 0.75f;
+			newPosition.z = position.z;
+			transform.position = newPosition;
+		} else {
+			rigidbody.velocity = (player.transform.position - transform.position) * GetVelocityMultiplier();
+		}
 	}
 
 	private float GetVelocityMultiplier() {
