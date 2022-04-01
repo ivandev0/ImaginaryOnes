@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +7,7 @@ public class GameController : Singleton<GameController> {
     public GameObject playButton;
     public GameObject restartButton;
     public GameObject scoreText;
+    public GameObject endMessage;
     public float deltaNextLevel = 10;
     public float offsetNextLevel = 5;
 
@@ -20,7 +20,7 @@ public class GameController : Singleton<GameController> {
     public const float minGameSpeed = 0.25f;
     public const float maxGameSpeed = 4;
 
-    private bool hasStarted, isBegin = true, isPlay, isEnd;
+    private bool hasStarted, isBegin = true, isPlay, isOver;
     private float score;
     private Coroutine enemySpawnRoutine;
     private Coroutine partsSpawnRoutine;
@@ -46,12 +46,13 @@ public class GameController : Singleton<GameController> {
     }
 
     public bool GameIsActive() {
-        return isBegin || isPlay;
+        return isBegin || isPlay || isOver;
     }
 
     public void Begin() {
         playButton.SetActive(false);
         restartButton.SetActive(false);
+        endMessage.SetActive(false);
         score = gameLevel = 0;
         gameSpeed = localGameSpeed = 1;
         if (hasStarted) {
@@ -67,6 +68,7 @@ public class GameController : Singleton<GameController> {
         }
 
         isBegin = true;
+        isOver = false;
         hasStarted = true;
         player.GetComponent<PlayerController>().MoveToTheScreenCenter(() => {
             isBegin = false;
@@ -96,9 +98,35 @@ public class GameController : Singleton<GameController> {
         }
 
         player.GetComponent<PlayerController>().BlowUp(() => {
-            isEnd = true;
             restartButton.SetActive(true);
         });
+    }
+
+    private IEnumerator GameWon() {
+        isOver = true;
+        StopCoroutine(enemySpawnRoutine);
+        StopCoroutine(partsSpawnRoutine);
+        if (gameLevelRoutine != null) StopCoroutine(gameLevelRoutine);
+        if (increaseGameSpeedRoutine != null) StopCoroutine(increaseGameSpeedRoutine);
+
+        while (GameObject.FindGameObjectsWithTag("Enemy").Length != 0) {
+            yield return new WaitForSeconds(0.25f);
+        }
+
+        StopCoroutine(scoreRoutine);
+        isPlay = false;
+        player.GetComponent<PlayerController>().MoveToTheScreenCenter(() => { });
+
+        foreach (var playerPart in GameObject.FindGameObjectsWithTag("PlayerPart")) {
+            StartCoroutine(
+                playerPart.GetComponent<PlayerPart>()
+                    .MoveAlong(player.transform.position - playerPart.transform.position)
+            );
+        }
+
+        endMessage.SetActive(true);
+        yield return new WaitForSeconds(2.5f);
+        restartButton.SetActive(true);
     }
 
     private void SetScore() {
@@ -119,10 +147,10 @@ public class GameController : Singleton<GameController> {
             gameLevel++;
         }
 
-        if (gameLevel == maxGameLevel) {
+        /*if (gameLevel == maxGameLevel) {
             yield return new WaitForSeconds(deltaNextLevel + gameLevel * offsetNextLevel);
-            Debug.Log("Game won");
-        }
+            StartCoroutine(GameWon());
+        }*/
     }
 
     private IEnumerator IncreaseGameSpeed() {

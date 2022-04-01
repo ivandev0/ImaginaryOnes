@@ -125,26 +125,50 @@ public class PlayerPart : ObjectWithBorder {
 
         var (first, second) = PlayerPartsController.Instance.GetTwoRandomParts();
         if (first == null && second == null) {
-            StartCoroutine(MoveAlong((transform.position - player.transform.position).normalized, imposterMaterial));
+            var center = player.transform.position;
+            StartCoroutine(MoveAlong((transform.position - center).normalized));
+            StartCoroutine(ChangeToImposter((transform.position - center).normalized, imposterMaterial));
         } else if (first == null || second == null) {
             var obj = first == null ? second : first;
             var center = (obj.transform.position + transform.position) / 2;
-            StartCoroutine(obj.GetComponent<PlayerPart>().MoveAlong((obj.transform.position - center).normalized, imposterMaterial));
-            StartCoroutine(MoveAlong((transform.position - center).normalized, imposterMaterial));
+            StartCoroutine(obj.GetComponent<PlayerPart>().MoveAlong((obj.transform.position - center).normalized));
+            StartCoroutine(obj.GetComponent<PlayerPart>().ChangeToImposter((obj.transform.position - center).normalized, imposterMaterial));
+            StartCoroutine(MoveAlong((transform.position - center).normalized));
+            StartCoroutine(ChangeToImposter((transform.position - center).normalized, imposterMaterial));
         } else {
             var center = (first.transform.position + second.transform.position + transform.position) / 3;
-            StartCoroutine(first.GetComponent<PlayerPart>().MoveAlong((first.transform.position - center).normalized, imposterMaterial));
-            StartCoroutine(second.GetComponent<PlayerPart>().MoveAlong((second.transform.position - center).normalized, imposterMaterial));
-            StartCoroutine(MoveAlong((transform.position - center).normalized, imposterMaterial));
+            StartCoroutine(first.GetComponent<PlayerPart>().MoveAlong((first.transform.position - center).normalized));
+            StartCoroutine(first.GetComponent<PlayerPart>().ChangeToImposter((first.transform.position - center).normalized, imposterMaterial));
+            StartCoroutine(second.GetComponent<PlayerPart>().MoveAlong((second.transform.position - center).normalized));
+            StartCoroutine(second.GetComponent<PlayerPart>().ChangeToImposter((second.transform.position - center).normalized, imposterMaterial));
+            StartCoroutine(MoveAlong((transform.position - center).normalized));
+            StartCoroutine(ChangeToImposter((transform.position - center).normalized, imposterMaterial));
         }
     }
 
-    private IEnumerator MoveAlong(Vector3 vector, Material imposterMaterial) {
+    public IEnumerator MoveAlong(Vector3 vector) {
         IsAttached = false;
+        sphereCollider.enabled = false;
+
+        var endValue = transform.position + vector * 10;
+        var totalDistance = (transform.position - endValue).sqrMagnitude;
+        var distance = totalDistance;
+        while (distance > 1e-1 && !IsDestroyed) {
+            float t = 1 - distance / totalDistance;
+            t = t * t * (3f - 2f * t);
+            rigidbody.velocity = vector * (10 * t + 1);
+
+            distance = (transform.position - endValue).sqrMagnitude;
+            yield return null;
+        }
+
+        Destroy(gameObject);
+    }
+
+    private IEnumerator ChangeToImposter(Vector3 vector, Material imposterMaterial) {
         IsImposter = true;
         meshRenderer.materials = new[] { meshRenderer.materials[0], imposterMaterial };
         imposterMaterial = meshRenderer.materials[1];
-        sphereCollider.enabled = false;
 
         var endValue = transform.position + vector * 10;
         var totalDistance = (transform.position - endValue).sqrMagnitude;
