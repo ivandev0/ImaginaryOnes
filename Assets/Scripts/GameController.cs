@@ -118,6 +118,11 @@ public class GameController : Singleton<GameController> {
             yield return new WaitForSeconds(deltaNextLevel + gameLevel * offsetNextLevel);
             gameLevel++;
         }
+
+        if (gameLevel == maxGameLevel) {
+            yield return new WaitForSeconds(deltaNextLevel + gameLevel * offsetNextLevel);
+            Debug.Log("Game won");
+        }
     }
 
     private IEnumerator IncreaseGameSpeed() {
