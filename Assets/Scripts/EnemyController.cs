@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Enemies;
 using UnityEngine;
@@ -33,6 +34,7 @@ public class EnemyController : Singleton<EnemyController> {
     private float afterBoomerangDelay = 1.5f;
 
     private Vector3 spawnValues;
+    private float verticalExtent, horizontalExtent;
 
     private Patterns SingleWavePattern(
         GameObject model, int count, float[] xPositions = null, float spawnRate = 0, float waveDelay = 0
@@ -165,8 +167,8 @@ public class EnemyController : Singleton<EnemyController> {
     }
 
     void Start() {
-        var verticalExtent = Camera.main.orthographicSize;
-        var horizontalExtent = verticalExtent * Screen.width / Screen.height;
+        verticalExtent = Camera.main.orthographicSize;
+        horizontalExtent = verticalExtent * Screen.width / Screen.height;
         spawnValues = new Vector3(horizontalExtent * 0.90f, verticalExtent * 1.5f, 0);
 
         if (enemiesByLevels.Length != GameController.maxGameLevel + 1) {
@@ -182,8 +184,9 @@ public class EnemyController : Singleton<EnemyController> {
 
             for (var i = 0; i < pattern.waves.Length; i++) {
                 var wave = pattern.waves[i];
-                var randomY = Random.Range(0, Camera.main.orthographicSize * 0.25f);
-                for (int j = 0; j < wave.enemies.Length; j++) {
+                var randomY = Random.Range(0, verticalExtent * 0.5f);
+                var randomXPositions = GetRandomLocations(wave.enemies.Length);
+                for (var j = 0; j < wave.enemies.Length; j++) {
                     var enemy = wave.enemies[j];
                     var spawnY = spawnValues.y + randomY;
                     GameObject newEnemyObject;
@@ -199,7 +202,7 @@ public class EnemyController : Singleton<EnemyController> {
                             var spawnRotation = wave.enemies[j].transform.rotation;
                             newEnemyObject = Instantiate(enemy, spawnPosition, spawnRotation);
                         } else {
-                            var spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnY, spawnValues.z);
+                            var spawnPosition = new Vector3(randomXPositions[j], spawnY, spawnValues.z);
                             var spawnRotation = wave.enemies[j].transform.rotation;
                             newEnemyObject = Instantiate(enemy, spawnPosition, spawnRotation);
                         }
@@ -217,6 +220,26 @@ public class EnemyController : Singleton<EnemyController> {
             }
             yield return new WaitForSeconds(ClampTime(enemiesForThisLevel.spawnDelay));
         }
+    }
+
+    private List<float> GetRandomLocations(int count) {
+        var randomXPositions = new List<float>();
+
+        var i = 0;
+        while(i < count) {
+            for (var j = 0; j < 10; j++) {
+                var randomX = Random.Range(-spawnValues.x, spawnValues.x);
+                if (randomXPositions.Any(it => Math.Abs(it - randomX) < horizontalExtent * 0.15f)) {
+                    continue;
+                }
+
+                randomXPositions.Add(randomX);
+                i++;
+                break;
+            }
+        }
+
+        return randomXPositions;
     }
 
     private float ClampTime(float time) {
