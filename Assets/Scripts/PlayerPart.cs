@@ -93,7 +93,7 @@ public class PlayerPart : ObjectWithBorder {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (!other.gameObject.CompareTag("Player")) return;
+        if (!other.gameObject.CompareTag("Player") || IsDestroyed) return;
         if (IsImposter) {
             sphereCollider.isTrigger = false;
             Betray();
