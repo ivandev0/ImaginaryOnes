@@ -93,8 +93,10 @@ public class EnemyController : Singleton<EnemyController> {
                     SingleWavePattern(rocket, 1),
                     SingleWavePattern(boomerangLarge, 1, new []{ 0.0f }, waveDelay: afterBoomerangDelay),
                     SingleWavePattern(cloud, 1, new []{ 0.0f }, waveDelay: 0.5f),
+                    SingleWavePattern(cloud, 1, new []{ 2.835f }, waveDelay: 0.5f),
+                    SingleWavePattern(cloud, 1, new []{ -2.835f }, waveDelay: 0.5f),
                 },
-                probabilities = new []{0.3f, 0.3f, 0.3f, 0.1f},
+                probabilities = new []{0.3f, 0.3f, 0.3f, 0.1f / 3, 0.1f / 3, 0.1f / 3},
                 spawnDelay = 1.25f
             },
             new EnemiesByLevel()
@@ -107,8 +109,10 @@ public class EnemyController : Singleton<EnemyController> {
                     SingleWavePattern(boomerangSmall, 1, new []{ 2.67f }, waveDelay: afterBoomerangDelay),
                     SingleWavePattern(boomerangSmall, 1, new []{ -2.67f }, waveDelay: afterBoomerangDelay),
                     SingleWavePattern(cloud, 1, new []{ 0.0f }, waveDelay: 0.5f),
+                    SingleWavePattern(cloud, 1, new []{ 2.835f }, waveDelay: 0.5f),
+                    SingleWavePattern(cloud, 1, new []{ -2.835f }, waveDelay: 0.5f),
                 },
-                probabilities = new []{0.3f, 0.2f, 0.1f, 0.1f, 0.1f, 0.2f},
+                probabilities = new []{0.3f, 0.2f, 0.1f, 0.1f, 0.1f, 0.2f / 3,  0.2f / 3, 0.2f / 3},
                 spawnDelay = 1.25f
             },
             new EnemiesByLevel()
@@ -119,8 +123,10 @@ public class EnemyController : Singleton<EnemyController> {
                     SingleWavePattern(boomerangSmall, 1, new []{ 2.67f }, waveDelay: afterBoomerangDelay),
                     SingleWavePattern(boomerangSmall, 1, new []{ -2.67f }, waveDelay: afterBoomerangDelay),
                     SingleWavePattern(cloud, 1, new []{ 0.0f }, waveDelay: 0.5f),
+                    SingleWavePattern(cloud, 1, new []{ 2.835f }, waveDelay: 0.5f),
+                    SingleWavePattern(cloud, 1, new []{ -2.835f }, waveDelay: 0.5f),
                 },
-                probabilities = new []{0.1f, 0.3f, 0.3f, 0.3f},
+                probabilities = new []{0.1f, 0.3f, 0.3f, 0.1f, 0.1f, 0.1f},
                 spawnDelay = 1.25f
             },
             new EnemiesByLevel()
@@ -159,8 +165,10 @@ public class EnemyController : Singleton<EnemyController> {
                     SingleWavePattern(rocket, 2, spawnRate: 0.25f),
                     SingleWavePattern(boomerangLarge, 1, new []{ 0.0f }, waveDelay: afterBoomerangDelay),
                     SingleWavePattern(cloud, 1, new []{ 0.0f }, waveDelay: 0.5f),
+                    SingleWavePattern(cloud, 1, new []{ 2.835f }, waveDelay: 0.5f),
+                    SingleWavePattern(cloud, 1, new []{ -2.835f }, waveDelay: 0.5f),
                 },
-                probabilities = new []{0.1f, 0.1f, 0.2f, 0.1f, 0.3f},
+                probabilities = new []{0.1f, 0.1f, 0.2f, 0.1f, 0.5f / 3, 0.5f / 3, 0.5f / 3},
                 spawnDelay = 1.25f
             }
         };
@@ -185,7 +193,7 @@ public class EnemyController : Singleton<EnemyController> {
             for (var i = 0; i < pattern.waves.Length; i++) {
                 var wave = pattern.waves[i];
                 var randomY = Random.Range(0, verticalExtent * 0.5f);
-                var randomXPositions = GetRandomLocations(wave.enemies.Length);
+                var randomXPositions = GetRandomLocations(wave.enemies.Length, wave.spawnRate != 0.0f);
                 for (var j = 0; j < wave.enemies.Length; j++) {
                     var enemy = wave.enemies[j];
                     var spawnY = spawnValues.y + randomY;
@@ -222,21 +230,25 @@ public class EnemyController : Singleton<EnemyController> {
         }
     }
 
-    private List<float> GetRandomLocations(int count) {
+    private List<float> GetRandomLocations(int count, bool totallyRandom) {
         var randomXPositions = new List<float>();
 
         var i = 0;
         while(i < count) {
-            for (var j = 0; j < 10; j++) {
-                var randomX = Random.Range(-spawnValues.x, spawnValues.x);
-                if (randomXPositions.Any(it => Math.Abs(it - randomX) < horizontalExtent * 0.15f)) {
-                    continue;
+            if (totallyRandom) {
+                randomXPositions.Add(Random.Range(-spawnValues.x, spawnValues.x));
+            } else {
+                for (var j = 0; j < 10; j++) {
+                    var randomX = Random.Range(-spawnValues.x, spawnValues.x);
+                    if (randomXPositions.Any(it => Math.Abs(it - randomX) < horizontalExtent * 0.15f)) {
+                        continue;
+                    }
+                    randomXPositions.Add(randomX);
+                    break;
                 }
-
-                randomXPositions.Add(randomX);
-                i++;
-                break;
             }
+
+            i++;
         }
 
         return randomXPositions;
